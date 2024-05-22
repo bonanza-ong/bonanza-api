@@ -31,7 +31,7 @@ public class Padrinho {
     private Pessoa pessoa;
 
     @ManyToMany
-    @JoinTable(name = "padrinhos_beneficiarios", inverseJoinColumns = @JoinColumn(name = "beneficiario_id"))
-    private List<Beneficiario> beneficiarios;
+    @JoinTable(name = "padrinhos_apadrinhados", inverseJoinColumns = @JoinColumn(name = "beneficiario_id"))
+    private List<Beneficiario> apadrinhados;
 
 }
