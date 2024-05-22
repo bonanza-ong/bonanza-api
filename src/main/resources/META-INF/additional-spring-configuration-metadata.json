@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "springdoc.use-fqn",
+      "type": "java.lang.String",
+      "description": "To enable fully qualified names."
+    },
+    {
+      "name": "springdoc.default-produces-media-type",
+      "type": "java.lang.String",
+      "description": "The default produces media type."
+    },
+    {
+      "name": "api.name",
+      "type": "java.lang.String",
+      "description": "Nome da API."
+    },
+    {
+      "name": "api.version",
+      "type": "java.lang.String",
+      "description": "Versão da API."
+    },
+    {
+      "name": "api.description",
+      "type": "java.lang.String",
+      "description": "Descrição da API."
+    }
+  ]
+}
