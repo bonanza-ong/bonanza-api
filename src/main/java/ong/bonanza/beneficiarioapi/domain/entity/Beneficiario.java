@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +20,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "beneficiarios")
+@Table(name = "beneficiarios", uniqueConstraints = @UniqueConstraint(columnNames = "pessoa_id"))
 public class Beneficiario {
 
     @Id
