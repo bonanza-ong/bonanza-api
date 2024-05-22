@@ -9,8 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,8 +26,10 @@ public class Beneficiario {
     @GeneratedValue
     private UUID id;
 
-    @NotBlank
-    private String nome;
+    @OneToOne
+    private Pessoa pessoa;
+
+    private String sobre;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

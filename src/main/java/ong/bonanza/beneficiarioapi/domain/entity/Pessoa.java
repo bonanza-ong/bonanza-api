@@ -9,7 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,17 +19,17 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "provedores")
-public class Provedor {
+@Table(name = "pessoas")
+public class Pessoa {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    @OneToOne
-    private Pessoa pessoa;
+    private String nome;
 
-    private String sobre;
+    @ManyToOne
+    private Endereco endereco;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
