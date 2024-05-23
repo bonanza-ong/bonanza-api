@@ -33,7 +33,7 @@ public class Item {
 
     @ManyToMany
     @JoinTable(name = "itens_categorias", inverseJoinColumns = @JoinColumn(name = "categoria_id"))
-    private List<CategoriaItem> categoria;
+    private List<CategoriaItem> categorias;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
