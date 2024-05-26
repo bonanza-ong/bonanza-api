@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,9 @@ public class Item {
     private UUID id;
 
     private String nome;
+
+    @ManyToOne
+    private CategoriaItem categoriaPrincipal;
 
     @ManyToMany
     @JoinTable(name = "itens_categorias", inverseJoinColumns = @JoinColumn(name = "categoria_id"))
