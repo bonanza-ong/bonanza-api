@@ -23,4 +23,14 @@ public class CategoriaItemService {
                 .orElseThrow(() -> CategoriaItemNaoEncotradaException.buscaPorId(id));
     }
 
+    public List<CategoriaItem> obterTodosOsPaisEEu(CategoriaItem categoriaItem) {
+        List<CategoriaItem> nos = new ArrayList<>();
+        CategoriaItem atual = categoriaItem;
+        while (atual != null) {
+            nos.add(atual);
+            atual = atual.getPai();
+        }
+        return nos;
+    }
+
 }
