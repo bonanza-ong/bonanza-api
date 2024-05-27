@@ -20,49 +20,47 @@ import ong.bonanza.beneficiarioapi.domain.service.ProvedorService;
 @Component
 public class IniciarAtendimentoDemandaItemUC {
 
-    private final InciarAtendimentoDemandaItemUCMapper mapper;
+	private final InciarAtendimentoDemandaItemUCMapper mapper;
 
-    private final AtedimentoDemandaService atedimentoDemandaService;
+	private final AtedimentoDemandaService atedimentoDemandaService;
 
-    private final PessoaService pessoaService;
+	private final PessoaService pessoaService;
 
-    private final ProvedorService provedorService;
+	private final ProvedorService provedorService;
 
-    private final DemandaItemService demandaItemService;
+	private final DemandaItemService demandaItemService;
 
-    private final BeneficiarioService beneficiarioService;
+	private final BeneficiarioService beneficiarioService;
 
-    public UUID executar(UUID pessoaProvedoraId, NovoAtendimentoDemandaItemDTO novoAtendimentoDemandaItem) {
-        return atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
-                novoAtendimentoDemandaItem,
-                demandaItemService.buscarPorIdEBeneficiario(
-                        novoAtendimentoDemandaItem.demandaItemId,
-                        beneficiarioService.buscarPorId(novoAtendimentoDemandaItem.beneficiarioId)),
-                provedorService
-                        .buscarPorPessoa(pessoaService.buscarPorId(pessoaProvedoraId))))
-                .getId();
-    }
+	public UUID executar(
+			UUID pessoaProvedoraId,
+			UUID beneficiarioId,
+			UUID demandaItemId,
+			Integer quantidadeAtendimento) {
+		return atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
+				quantidadeAtendimento,
+				demandaItemService.buscarPorIdEBeneficiario(
+						demandaItemId,
+						beneficiarioService.buscarPorId(beneficiarioId)),
+				provedorService
+						.buscarPorPessoa(pessoaService.buscarPorId(pessoaProvedoraId))))
+				.getId();
+	}
 
-    public record NovoAtendimentoDemandaItemDTO(
-            UUID beneficiarioId,
-            UUID demandaItemId,
-            Integer quantidadeAtendimento) {
-    }
+	@Mapper
+	public interface InciarAtendimentoDemandaItemUCMapper {
 
-    @Mapper
-    public interface InciarAtendimentoDemandaItemUCMapper {
+		@Mapping(target = "demanda", source = "demandaItem")
+		@Mapping(target = "quantidade", source = "quantidadeAtendimento")
+		@Mapping(target = "status", ignore = true)
+		@Mapping(target = "id", ignore = true)
+		@Mapping(target = "updatedAt", ignore = true)
+		@Mapping(target = "createdAt", ignore = true)
+		Doacao toDoacao(
+				Integer quantidadeAtendimento,
+				DemandaItem demandaItem,
+				Provedor provedor);
 
-        @Mapping(target = "demanda", source = "demandaItem")
-        @Mapping(target = "quantidade", source = "novoAtendimentoDemandaItemDTO.quantidadeAtendimento")
-        @Mapping(target = "status", ignore = true)
-        @Mapping(target = "id", ignore = true)
-        @Mapping(target = "updatedAt", ignore = true)
-        @Mapping(target = "createdAt", ignore = true)
-        Doacao toDoacao(
-                NovoAtendimentoDemandaItemDTO novoAtendimentoDemandaItemDTO,
-                DemandaItem demandaItem,
-                Provedor provedor);
-
-    }
+	}
 
 }

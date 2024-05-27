@@ -60,7 +60,7 @@ public class BeneficiarioController {
 	ResponseEntity<Void> iniciarAtendimentoDemanda(
 			@PathVariable UUID beneficiarioId,
 			@PathVariable UUID demandaItemId,
-			@RequestBody IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItemDTO novoAtendimentoDemandaItem) {
+			@RequestBody Integer quantidadeAtendimento) {
 
 		UUID pessoaId = authenticationProvider.getAuthenticatedUserId();
 
@@ -69,7 +69,9 @@ public class BeneficiarioController {
 						pessoaId.toString(),
 						iniciarAtendimentoDemandaItemUC.executar(
 								pessoaId,
-								novoAtendimentoDemandaItem)
+								beneficiarioId,
+								demandaItemId,
+								quantidadeAtendimento)
 								.toString())))
 				.build();
 
