@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+        name: api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bonanza
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+
+springdoc:
+  use-fqn: true
+  default-produces-media-type: application/json
+
+api:
+  name: API
+  version: localhost
+  description: Beneficiário API
