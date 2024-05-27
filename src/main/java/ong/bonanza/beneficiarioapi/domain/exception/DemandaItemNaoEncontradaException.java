@@ -2,6 +2,7 @@ package ong.bonanza.beneficiarioapi.domain.exception;
 
 import java.util.UUID;
 
+import ong.bonanza.beneficiarioapi.domain.entity.Beneficiario;
 import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
 
 public class DemandaItemNaoEncontradaException extends RecursoNaoEncontradoException {
@@ -10,8 +11,11 @@ public class DemandaItemNaoEncontradaException extends RecursoNaoEncontradoExcep
         super(DemandaItem.class, consulta);
     }
 
-    public static DemandaItemNaoEncontradaException buscaPorId(UUID id) {
-        return new DemandaItemNaoEncontradaException(String.format("[id=%s]", id.toString()));
+    public static DemandaItemNaoEncontradaException buscaPorIdEBeneficiario(UUID id, Beneficiario beneficiario) {
+        return new DemandaItemNaoEncontradaException(
+                String.format("[demandaItemId=%s] e [beneficiarioId=%s]",
+                        id.toString(),
+                        beneficiario.getId()));
     }
 
 }

@@ -11,6 +11,7 @@ import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.Doacao;
 import ong.bonanza.beneficiarioapi.domain.entity.Provedor;
 import ong.bonanza.beneficiarioapi.domain.service.AtedimentoDemandaService;
+import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.PessoaService;
 import ong.bonanza.beneficiarioapi.domain.service.ProvedorService;
@@ -29,14 +30,23 @@ public class IniciarAtendimentoDemandaItemUC {
 
     private final DemandaItemService demandaItemService;
 
-    public void executar(UUID pessoaProvedoraId, NovoAtendimentoDemandaItemDTO novoAtendimentoDemandaItem) {
-        atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
+    private final BeneficiarioService beneficiarioService;
+
+    public UUID executar(UUID pessoaProvedoraId, NovoAtendimentoDemandaItemDTO novoAtendimentoDemandaItem) {
+        return atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
                 novoAtendimentoDemandaItem,
-                demandaItemService.buscarPorId(novoAtendimentoDemandaItem.demandaItemId),
-                provedorService.buscarPorPessoa(pessoaService.buscarPorId(pessoaProvedoraId))));
+                demandaItemService.buscarPorIdEBeneficiario(
+                        novoAtendimentoDemandaItem.demandaItemId,
+                        beneficiarioService.buscarPorId(novoAtendimentoDemandaItem.beneficiarioId)),
+                provedorService
+                        .buscarPorPessoa(pessoaService.buscarPorId(pessoaProvedoraId))))
+                .getId();
     }
 
-    public record NovoAtendimentoDemandaItemDTO(UUID demandaItemId, Integer quantidadeAtendimento) {
+    public record NovoAtendimentoDemandaItemDTO(
+            UUID beneficiarioId,
+            UUID demandaItemId,
+            Integer quantidadeAtendimento) {
     }
 
     @Mapper

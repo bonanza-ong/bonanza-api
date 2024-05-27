@@ -34,7 +34,7 @@ public class AtedimentoDemandaService {
     private final DoacaoRepository doacaoRepository;
 
     @Transactional
-    public void inciarAtendimento(Doacao doacao) {
+    public Doacao inciarAtendimento(Doacao doacao) {
 
         if (List.of(STATUS_DEMANDA_ITEM_INAPTOS).contains(doacao.getDemanda().getStatus()))
             throw new DoacaoParaDemandaComStatusInvalidoException(doacao);
@@ -55,7 +55,8 @@ public class AtedimentoDemandaService {
         doacao.setStatus(StatusDoacao.INICIADA);
         doacao.getDemanda().setQuantidadeAtendida(quantidadeAtendidaAtual + doacao.getQuantidade());
         doacao.getDemanda().setStatus(StatusDemandaItem.EM_PROGRESSO);
-        doacaoRepository.save(doacao);
+
+        return doacaoRepository.save(doacao);
     }
 
 }
