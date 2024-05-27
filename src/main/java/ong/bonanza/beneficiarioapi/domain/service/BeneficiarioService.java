@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import ong.bonanza.beneficiarioapi.domain.entity.Beneficiario;
+import ong.bonanza.beneficiarioapi.domain.exception.BeneficiarioNaoEncontradoException;
 import ong.bonanza.beneficiarioapi.domain.repository.BeneficiarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class BeneficiarioService {
     public Beneficiario buscarPorId(UUID id) {
         return beneficiarioRepository
                 .findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> BeneficiarioNaoEncontradoException.buscaPorId(id));
     }
 
     public List<Beneficiario> buscarTodosPaginado(int page, int size) {
