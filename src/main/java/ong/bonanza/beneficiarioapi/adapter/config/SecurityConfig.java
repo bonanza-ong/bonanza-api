@@ -45,8 +45,10 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/itens**")
                         .hasAnyRole("administrador")
+                        .requestMatchers(HttpMethod.GET, "beneficiarios**")
+                        .authenticated()
                         .requestMatchers(HttpMethod.POST,
-                                "beneficiario/**/demandas-itens/**")
+                                "beneficiarios**")
                         .hasAnyRole("provedor"))
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtConverter)))
