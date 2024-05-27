@@ -40,7 +40,7 @@ public class Doacao {
     private DemandaItem demanda;
 
     @NotNull
-    private Integer quantidadeAtendida;
+    private Integer quantidade;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
