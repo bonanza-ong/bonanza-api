@@ -19,7 +19,7 @@ import ong.bonanza.beneficiarioapi.domain.enumeration.TipoContato;
 @Setter
 @ToString
 @Entity
-@Table(name = "pessoas")
+@Table(name = "contatos")
 public class Contato {
 
     @Id
