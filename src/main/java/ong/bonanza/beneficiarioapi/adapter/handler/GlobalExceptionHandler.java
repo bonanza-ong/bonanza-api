@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import ong.bonanza.beneficiarioapi.domain.exception.RecursoNaoEncontradoException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -31,6 +33,11 @@ public class GlobalExceptionHandler {
             return String.format(" mensagem=[%s]", objectError.getDefaultMessage());
         }
 
+    }
+
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
+    public ResponseEntity<String> handle(RecursoNaoEncontradoException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 }
