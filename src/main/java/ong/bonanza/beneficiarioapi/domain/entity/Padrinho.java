@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,7 +28,9 @@ public class Padrinho {
     @GeneratedValue
     private UUID id;
 
+    @NotNull
     @OneToOne
+    @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
 
     @ManyToMany
