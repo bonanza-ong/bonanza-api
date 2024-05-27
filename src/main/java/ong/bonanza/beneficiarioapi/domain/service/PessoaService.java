@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.domain.entity.Pessoa;
+import ong.bonanza.beneficiarioapi.domain.exception.PessoaNaoEncontradaException;
 import ong.bonanza.beneficiarioapi.domain.repository.PessoaRepository;
 
 @RequiredArgsConstructor
@@ -15,12 +16,9 @@ public class PessoaService {
     private final PessoaRepository pessoaRepository;
 
     public Pessoa buscarPorId(UUID id) {
-
-        // TODO PessoaNaoEncontradaException
-
         return pessoaRepository
                 .findById(id)
-                .orElseThrow(null);
+                .orElseThrow(() -> PessoaNaoEncontradaException.buscaPorId(id));
     }
 
 }

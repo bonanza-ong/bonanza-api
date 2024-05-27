@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
+import ong.bonanza.beneficiarioapi.domain.exception.DemandaItemNaoEncontradaException;
 import ong.bonanza.beneficiarioapi.domain.repository.DemandaItemRepository;
 
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class DemandaItemService {
     public DemandaItem buscarPorId(UUID id) {
         return demandaItemRepository
                 .findById(id)
-                .orElseThrow(null);
+                .orElseThrow(() -> DemandaItemNaoEncontradaException.buscaPorId(id));
     }
 
 }
