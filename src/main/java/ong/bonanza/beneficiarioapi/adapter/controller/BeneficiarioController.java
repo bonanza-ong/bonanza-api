@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("beneficiarios")
-public class BeneficiariosController {
+public class BeneficiarioController {
 
     private final BuscarBeneficiarioPaginadoUC buscarBeneficiarioPaginadoUC;
 
