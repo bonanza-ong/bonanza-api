@@ -39,6 +39,8 @@ public class DemandaItem {
     @NotNull
     private Integer quantidadeSolicitada;
 
+    private Integer quantidadeAtendida;
+
     @NotNull
     @ManyToOne
     private Item item;
