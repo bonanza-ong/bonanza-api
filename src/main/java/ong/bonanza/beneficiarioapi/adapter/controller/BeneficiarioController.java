@@ -51,9 +51,10 @@ public class BeneficiarioController {
 
 	@Operation(summary = "Inicia atendimento demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Inicia Atendimento de demanda, se mais de um provedor tentar pegar a mesma demanda ao mesmo tempo será lancaçado um erro de conflito")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarBeneficiarioPaginadoUC.BeneficiarioDTO.class)))),
+			@ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = IniciarAtendimentoDemandaItemUC.AtendimentoDemandaDTO.class))),
 			@ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
 			@ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = String.class))),
+			@ApiResponse(responseCode = "422", content = @Content(schema = @Schema(implementation = String.class))),
 			@ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
 	})
 	@PostMapping("{beneficiarioId}/demandas-itens/{demandaItemId}/atendimentos")
