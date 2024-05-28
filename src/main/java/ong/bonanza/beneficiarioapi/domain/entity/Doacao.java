@@ -7,13 +7,17 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ong.bonanza.beneficiarioapi.domain.enumeration.StatusDoacao;
 
 @Getter
 @Setter
@@ -29,10 +33,14 @@ public class Doacao {
     @ManyToOne
     private Provedor provedor;
 
+    @Enumerated(EnumType.STRING)
+    private StatusDoacao status;
+
     @ManyToOne
     private DemandaItem demanda;
 
-    private Integer quantidadeAtendida;
+    @NotNull
+    private Integer quantidade;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
