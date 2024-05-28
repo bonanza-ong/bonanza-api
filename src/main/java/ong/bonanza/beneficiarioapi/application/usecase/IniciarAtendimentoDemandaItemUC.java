@@ -33,7 +33,7 @@ public class IniciarAtendimentoDemandaItemUC {
 
 	private final BeneficiarioService beneficiarioService;
 
-	public AtendimentoDemandaDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
+	public AtendimentoDemandaItemDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
 		return mapper.toAtendimentoDemandaDTO(
 				novoAtendimento.quantidadeAtendimento,
 				atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
@@ -52,7 +52,7 @@ public class IniciarAtendimentoDemandaItemUC {
 			Integer quantidadeAtendimento) {
 	}
 
-	public record AtendimentoDemandaDTO(
+	public record AtendimentoDemandaItemDTO(
 			UUID id,
 			StatusDoacao status,
 			Integer quantidadeProvida,
@@ -87,7 +87,7 @@ public class IniciarAtendimentoDemandaItemUC {
 				Provedor provedor);
 
 		@Mapping(target = "demanda.beneficiarioId", source = "doacao.demanda.beneficiario.id")
-		AtendimentoDemandaDTO toAtendimentoDemandaDTO(Integer quantidadeProvida, Doacao doacao);
+		AtendimentoDemandaItemDTO toAtendimentoDemandaDTO(Integer quantidadeProvida, Doacao doacao);
 
 	}
 
