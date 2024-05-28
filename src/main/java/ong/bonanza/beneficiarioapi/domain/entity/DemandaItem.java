@@ -60,6 +60,6 @@ public class DemandaItem {
 
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
-    protected Long versionNum;
+    private Long versionNum;
 
 }
