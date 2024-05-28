@@ -56,24 +56,25 @@ public class BeneficiarioController {
 			@ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = String.class))),
 			@ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
 	})
-	@PostMapping("{beneficiarioId}/demandas-itens/{demandaItemId}")
-	ResponseEntity<Void> iniciarAtendimentoDemanda(
+	@PostMapping("{beneficiarioId}/demandas-itens/{demandaItemId}/atendimentos")
+	ResponseEntity<IniciarAtendimentoDemandaItemUC.AtendimentoDemandaDTO> iniciarAtendimentoDemanda(
 			@PathVariable UUID beneficiarioId,
 			@PathVariable UUID demandaItemId,
 			@RequestBody Integer quantidadeAtendimento) {
 
-		UUID pessoaId = authenticationProvider.getAuthenticatedUserId();
+		IniciarAtendimentoDemandaItemUC.AtendimentoDemandaDTO atendimento = iniciarAtendimentoDemandaItemUC
+				.executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
+						authenticationProvider.getAuthenticatedUserId(),
+						beneficiarioId,
+						demandaItemId,
+						quantidadeAtendimento));
 
 		return ResponseEntity
-				.created(URI.create(String.format("provedores/%s/doacoes/%s",
-						pessoaId.toString(),
-						iniciarAtendimentoDemandaItemUC.executar(
-								pessoaId,
-								beneficiarioId,
-								demandaItemId,
-								quantidadeAtendimento)
-								.toString())))
-				.build();
+				.created(URI.create(String.format("beneficiarios/%s/demandas-itens/%s/atendimentos/%s",
+						beneficiarioId.toString(),
+						demandaItemId.toString(),
+						atendimento)))
+				.body(atendimento);
 
 	}
 }

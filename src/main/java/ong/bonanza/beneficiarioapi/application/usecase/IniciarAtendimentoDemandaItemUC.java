@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.Doacao;
 import ong.bonanza.beneficiarioapi.domain.entity.Provedor;
+import ong.bonanza.beneficiarioapi.domain.enumeration.StatusDoacao;
 import ong.bonanza.beneficiarioapi.domain.service.AtedimentoDemandaService;
 import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
@@ -32,19 +33,43 @@ public class IniciarAtendimentoDemandaItemUC {
 
 	private final BeneficiarioService beneficiarioService;
 
-	public UUID executar(
+	public AtendimentoDemandaDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
+		return mapper.toAtendimentoDemandaDTO(
+				novoAtendimento.quantidadeAtendimento,
+				atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
+						novoAtendimento.quantidadeAtendimento,
+						demandaItemService.buscarPorIdEBeneficiario(
+								novoAtendimento.demandaItemId,
+								beneficiarioService.buscarPorId(novoAtendimento.beneficiarioId)),
+						provedorService
+								.buscarPorPessoa(pessoaService.buscarPorId(novoAtendimento.pessoaProvedoraId)))));
+	}
+
+	public record NovoAtendimentoDemandaItem(
 			UUID pessoaProvedoraId,
 			UUID beneficiarioId,
 			UUID demandaItemId,
 			Integer quantidadeAtendimento) {
-		return atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
-				quantidadeAtendimento,
-				demandaItemService.buscarPorIdEBeneficiario(
-						demandaItemId,
-						beneficiarioService.buscarPorId(beneficiarioId)),
-				provedorService
-						.buscarPorPessoa(pessoaService.buscarPorId(pessoaProvedoraId))))
-				.getId();
+	}
+
+	public record AtendimentoDemandaDTO(
+			UUID id,
+			StatusDoacao status,
+			Integer quantidadeProvida,
+			DemandaItemDTO demanda) {
+	}
+
+	public record DemandaItemDTO(
+			UUID id,
+			UUID beneficiarioId,
+			Integer quantidadeSolicitada,
+			Integer quantidadeAtendida,
+			ItemDTO item) {
+	}
+
+	public record ItemDTO(
+			UUID id,
+			String nome) {
 	}
 
 	@Mapper
@@ -60,6 +85,9 @@ public class IniciarAtendimentoDemandaItemUC {
 				Integer quantidadeAtendimento,
 				DemandaItem demandaItem,
 				Provedor provedor);
+
+		@Mapping(target = "demanda.beneficiarioId", source = "doacao.demanda.beneficiario.id")
+		AtendimentoDemandaDTO toAtendimentoDemandaDTO(Integer quantidadeProvida, Doacao doacao);
 
 	}
 
