@@ -15,7 +15,7 @@ import ong.bonanza.beneficiarioapi.domain.repository.DoacaoRepository;
 
 @RequiredArgsConstructor
 @Service
-public class AtedimentoDemandaService {
+public class DoacaoService {
 
     private final StatusDoacao[] STATUS_DOACAO_CONTABILIZAVEIS = {
             StatusDoacao.INICIADA,
@@ -34,7 +34,7 @@ public class AtedimentoDemandaService {
     private final DoacaoRepository doacaoRepository;
 
     @Transactional
-    public Doacao inciarAtendimento(Doacao doacao) {
+    public Doacao inciarDoacao(Doacao doacao) {
 
         if (List.of(STATUS_DEMANDA_ITEM_INAPTOS).contains(doacao.getDemanda().getStatus()))
             throw new DoacaoParaDemandaComStatusInvalidoException(doacao);

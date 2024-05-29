@@ -11,7 +11,7 @@ import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.Doacao;
 import ong.bonanza.beneficiarioapi.domain.entity.Provedor;
 import ong.bonanza.beneficiarioapi.domain.enumeration.StatusDoacao;
-import ong.bonanza.beneficiarioapi.domain.service.AtedimentoDemandaService;
+import ong.bonanza.beneficiarioapi.domain.service.DoacaoService;
 import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.PessoaService;
@@ -23,7 +23,7 @@ public class IniciarAtendimentoDemandaItemUC {
 
 	private final InciarAtendimentoDemandaItemUCMapper mapper;
 
-	private final AtedimentoDemandaService atedimentoDemandaService;
+	private final DoacaoService doacaoService;
 
 	private final PessoaService pessoaService;
 
@@ -36,7 +36,7 @@ public class IniciarAtendimentoDemandaItemUC {
 	public AtendimentoDemandaItemDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
 		return mapper.toAtendimentoDemandaDTO(
 				novoAtendimento.quantidadeAtendimento,
-				atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
+				doacaoService.inciarDoacao(mapper.toDoacao(
 						novoAtendimento.quantidadeAtendimento,
 						demandaItemService.buscarPorIdEBeneficiario(
 								novoAtendimento.demandaItemId,
