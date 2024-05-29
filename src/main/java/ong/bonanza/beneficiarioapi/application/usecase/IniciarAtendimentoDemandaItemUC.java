@@ -7,11 +7,11 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import ong.bonanza.beneficiarioapi.domain.entity.AtendimentoDemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
-import ong.bonanza.beneficiarioapi.domain.entity.Doacao;
 import ong.bonanza.beneficiarioapi.domain.entity.Provedor;
-import ong.bonanza.beneficiarioapi.domain.enumeration.StatusDoacao;
-import ong.bonanza.beneficiarioapi.domain.service.DoacaoService;
+import ong.bonanza.beneficiarioapi.domain.enumeration.StatusAtendimentoDemandaItem;
+import ong.bonanza.beneficiarioapi.domain.service.AtendimentoDemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.PessoaService;
@@ -23,7 +23,7 @@ public class IniciarAtendimentoDemandaItemUC {
 
 	private final InciarAtendimentoDemandaItemUCMapper mapper;
 
-	private final DoacaoService doacaoService;
+	private final AtendimentoDemandaItemService atendimentoDemandaItemService;
 
 	private final PessoaService pessoaService;
 
@@ -34,9 +34,9 @@ public class IniciarAtendimentoDemandaItemUC {
 	private final BeneficiarioService beneficiarioService;
 
 	public AtendimentoDemandaItemDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
-		return mapper.toAtendimentoDemandaDTO(
+		return mapper.toAtendimentoDemandaItemDTO(
 				novoAtendimento.quantidadeAtendimento,
-				doacaoService.inciarDoacao(mapper.toDoacao(
+				atendimentoDemandaItemService.inciar(mapper.toAtendimentoDemandaItem(
 						novoAtendimento.quantidadeAtendimento,
 						demandaItemService.buscarPorIdEBeneficiario(
 								novoAtendimento.demandaItemId,
@@ -54,7 +54,7 @@ public class IniciarAtendimentoDemandaItemUC {
 
 	public record AtendimentoDemandaItemDTO(
 			UUID id,
-			StatusDoacao status,
+			StatusAtendimentoDemandaItem status,
 			Integer quantidadeProvida,
 			DemandaItemDTO demanda) {
 	}
@@ -81,13 +81,15 @@ public class IniciarAtendimentoDemandaItemUC {
 		@Mapping(target = "id", ignore = true)
 		@Mapping(target = "updatedAt", ignore = true)
 		@Mapping(target = "createdAt", ignore = true)
-		Doacao toDoacao(
+		AtendimentoDemandaItem toAtendimentoDemandaItem(
 				Integer quantidadeAtendimento,
 				DemandaItem demandaItem,
 				Provedor provedor);
 
-		@Mapping(target = "demanda.beneficiarioId", source = "doacao.demanda.beneficiario.id")
-		AtendimentoDemandaItemDTO toAtendimentoDemandaDTO(Integer quantidadeProvida, Doacao doacao);
+		@Mapping(target = "demanda.beneficiarioId", source = "atendimentoDemanda.demanda.beneficiario.id")
+		AtendimentoDemandaItemDTO toAtendimentoDemandaItemDTO(
+				Integer quantidadeProvida,
+				AtendimentoDemandaItem atendimentoDemanda);
 
 	}
 

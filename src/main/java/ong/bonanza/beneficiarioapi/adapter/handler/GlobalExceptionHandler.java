@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
-import ong.bonanza.beneficiarioapi.domain.exception.DoacaoExcedeuQuantidadeDemandaItemException;
+import ong.bonanza.beneficiarioapi.domain.exception.AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoNaoEncontradoException;
 
 @ControllerAdvice
@@ -53,8 +53,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(DoacaoExcedeuQuantidadeDemandaItemException.class)
-    public ResponseEntity<String> handle(DoacaoExcedeuQuantidadeDemandaItemException e) {
+    @ExceptionHandler(AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException.class)
+    public ResponseEntity<String> handle(AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 

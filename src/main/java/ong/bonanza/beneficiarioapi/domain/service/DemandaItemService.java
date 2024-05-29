@@ -26,6 +26,7 @@ public class DemandaItemService {
 
     public DemandaItem cadastrar(DemandaItem demandaItem) {
         demandaItem.setStatus(StatusDemandaItem.AGUARDANDO_CONFIRMACAO);
+        demandaItem.setQuantidadeAtendida(0);
         return demandaItemRepository.save(demandaItem);
     }
 

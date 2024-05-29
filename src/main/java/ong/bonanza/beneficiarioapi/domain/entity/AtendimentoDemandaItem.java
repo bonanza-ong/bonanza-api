@@ -17,14 +17,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ong.bonanza.beneficiarioapi.domain.enumeration.StatusDoacao;
+import ong.bonanza.beneficiarioapi.domain.enumeration.StatusAtendimentoDemandaItem;
 
 @Getter
 @Setter
 @ToString
 @Entity
-@Table(name = "doacoes")
-public class Doacao {
+@Table(name = "atendimentos_demandas")
+public class AtendimentoDemandaItem {
 
     @Id
     @GeneratedValue
@@ -34,7 +34,7 @@ public class Doacao {
     private Provedor provedor;
 
     @Enumerated(EnumType.STRING)
-    private StatusDoacao status;
+    private StatusAtendimentoDemandaItem status;
 
     @ManyToOne
     private DemandaItem demanda;
