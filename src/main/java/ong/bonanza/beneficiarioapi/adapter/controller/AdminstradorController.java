@@ -1,12 +1,11 @@
 package ong.bonanza.beneficiarioapi.adapter.controller;
 
 import java.net.URI;
+import java.util.List;
 
+import ong.bonanza.beneficiarioapi.application.usecase.BuscarItemPaginadoUC;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -23,6 +22,7 @@ import ong.bonanza.beneficiarioapi.application.usecase.CadastrarItemUC;
 public class AdminstradorController {
 
     private final CadastrarItemUC cadastrarItemUC;
+    private final BuscarItemPaginadoUC buscarItemPaginadoUC;
 
     @Operation(summary = "Cadastra Item", description = "Cadastra Item em uma categoria, caso a categoria não exista será retornado um erro 404")
     @ApiResponses(value = {
@@ -40,4 +40,17 @@ public class AdminstradorController {
                 .body(itemCriado);
     }
 
+    @Operation(summary = "Busca por todos os itens, podendo filtrar por nome", description = "Busca por todos os itens utilizando de paginação e ordem de último atualizado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarItemPaginadoUC.class)))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping("/itens")
+    public ResponseEntity<List<BuscarItemPaginadoUC.ItemDTO>> buscarItemPaginado(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "nome", defaultValue = "") String nome
+    ) {
+        return ResponseEntity.ok(buscarItemPaginadoUC.executar(page, size, nome));
+    }
 }
