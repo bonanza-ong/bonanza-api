@@ -23,7 +23,7 @@ import ong.bonanza.beneficiarioapi.domain.enumeration.StatusAtendimentoDemandaIt
 @Setter
 @ToString
 @Entity
-@Table(name = "atendimentos_demandas_itens")
+@Table(name = "atendimentos_demandas_item")
 public class AtendimentoDemandaItem {
 
     @Id
