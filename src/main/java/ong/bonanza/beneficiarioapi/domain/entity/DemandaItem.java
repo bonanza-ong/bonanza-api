@@ -43,6 +43,8 @@ public class DemandaItem {
     @NotNull
     private Integer quantidadeSolicitada;
 
+    @NotNull
+    @Column(columnDefinition = "integer DEFAULT 0", nullable = false)
     private Integer quantidadeAtendida;
 
     @NotNull
