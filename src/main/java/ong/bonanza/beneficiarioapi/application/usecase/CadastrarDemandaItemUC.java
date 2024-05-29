@@ -11,6 +11,7 @@ import ong.bonanza.beneficiarioapi.domain.entity.Beneficiario;
 import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.Item;
 import ong.bonanza.beneficiarioapi.domain.entity.Padrinho;
+import ong.bonanza.beneficiarioapi.domain.enumeration.StatusDemandaItem;
 import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.ItemService;
@@ -33,27 +34,37 @@ public class CadastrarDemandaItemUC {
 
     private final CadastrarDemandaItemUCMapper mapper;
 
-    public void executar(NovaDemandaItemDTO novaDemandaItem) {
+    public DemandaItemDTO executar(NovaDemandaItemDTO novaDemandaItem) {
 
         final Beneficiario beneficiario = beneficiarioService.buscarPorId(novaDemandaItem.beneficiarioId);
 
-        demandaItemService.cadastrar(mapper.toDemandaItem(
+        return mapper.toDemandaItemDTO(demandaItemService.cadastrar(mapper.toDemandaItem(
                 padrinhoService.buscarPorPessoaEBeneficiario(
                         pessoaService.buscarPorId(novaDemandaItem.pessoaPadrinhoId), beneficiario),
                 beneficiario,
-                itemService.buscarPorId(novaDemandaItem.itemId),
-                novaDemandaItem));
+                itemService.buscarPorId(novaDemandaItem.informacoesItem.itemId),
+                novaDemandaItem)));
 
+    }
+
+    public record DemandaItemDTO(
+            UUID id,
+            UUID padrinhoId,
+            UUID beneficiarioId,
+            StatusDemandaItem status,
+            InformacoesItemDemandaItemDTO informacoesItem) {
     }
 
     public record NovaDemandaItemDTO(
             UUID pessoaPadrinhoId,
             UUID beneficiarioId,
-            UUID itemId,
-            InformacoesDemandaItemDTO informacoes) {
+            InformacoesItemDemandaItemDTO informacoesItem) {
     }
 
-    public record InformacoesDemandaItemDTO(Integer quantidadeSolicitada, String detalhes) {
+    public record InformacoesItemDemandaItemDTO(
+            UUID itemId,
+            Integer quantidadeSolicitada,
+            String detalhes) {
     }
 
     @Mapper
@@ -65,13 +76,21 @@ public class CadastrarDemandaItemUC {
         @Mapping(target = "versionNum", ignore = true)
         @Mapping(target = "quantidadeAtendida", ignore = true)
         @Mapping(target = "status", ignore = true)
-        @Mapping(target = "quantidadeSolicitada", source = "novaDemandaItemDTO.informacoes.quantidadeSolicitada")
-        @Mapping(target = "detalhes", source = "novaDemandaItemDTO.informacoes.detalhes")
+        @Mapping(target = "quantidadeSolicitada", source = "novaDemandaItemDTO.informacoesItem.quantidadeSolicitada")
+        @Mapping(target = "detalhes", source = "novaDemandaItemDTO.informacoesItem.detalhes")
         DemandaItem toDemandaItem(
                 Padrinho padrinho,
                 Beneficiario beneficiario,
                 Item item,
                 NovaDemandaItemDTO novaDemandaItemDTO);
+
+        @Mapping(target = "padrinhoId", source = "padrinho.id")
+        @Mapping(target = "beneficiarioId", source = "beneficiario.id")
+        @Mapping(target = "informacoesItem", source = "demandaItem")
+        DemandaItemDTO toDemandaItemDTO(DemandaItem demandaItem);
+
+        @Mapping(target = "itemId", source = "item.id")
+        InformacoesItemDemandaItemDTO toInformacoesItemDemandaItemDTO(DemandaItem demandaItem);
 
     }
 
