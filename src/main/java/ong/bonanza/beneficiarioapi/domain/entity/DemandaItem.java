@@ -37,6 +37,10 @@ public class DemandaItem {
     private Beneficiario beneficiario;
 
     @NotNull
+    @ManyToOne
+    private Padrinho padrinho;
+
+    @NotNull
     private Integer quantidadeSolicitada;
 
     private Integer quantidadeAtendida;
