@@ -95,7 +95,7 @@ public class BeneficiarioController {
 
 		final CadastrarDemandaItemUC.DemandaItemDTO demandaItem = cadastrarDemandaItemUC
 				.executar(new CadastrarDemandaItemUC.NovaDemandaItemDTO(
-						beneficiarioId,
+						authenticationProvider.getAuthenticatedUserId(),
 						beneficiarioId,
 						informacoes));
 
