@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ong.bonanza.beneficiarioapi.domain.entity.Item;
 
 public interface ItemRepository extends JpaRepository<Item, UUID> {
-    List<Item> findByNomeContaining(String nome, Pageable pageable);
+    List<Item> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
 }

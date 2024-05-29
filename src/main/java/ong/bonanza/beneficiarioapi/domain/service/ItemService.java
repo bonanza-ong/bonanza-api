@@ -19,24 +19,15 @@ public class ItemService {
     public Item cadastrar(Item item) {
         return itemRepository.save(item);
     }
-    
+
     public List<Item> buscarPaginado(int page, int size, String nome) {
-        if (nome.isBlank()) {
-            return itemRepository.findAll(
-                            PageRequest.of(
-                                    page,
-                                    size,
-                                    Sort.by("updatedAt").descending()))
-                    .toList();
-        } else {
-            return itemRepository.findByNomeContaining(nome,
-                    PageRequest.of(
-                            page,
-                            size,
-                            Sort.by("updatedAt").descending()));
-        }
+        return itemRepository.findByNomeContainingIgnoreCase(nome,
+                PageRequest.of(
+                        page,
+                        size,
+                        Sort.by("nome").ascending()));
     }
-    
+
     public List<Item> buscarPaginado(int page, int size) {
         return buscarPaginado(page, size, "");
     }
