@@ -31,80 +31,80 @@ import ong.bonanza.beneficiarioapi.application.usecase.IniciarAtendimentoDemanda
 @RequestMapping("beneficiarios")
 public class BeneficiarioController {
 
-	private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider authenticationProvider;
 
-	private final BuscarBeneficiarioPaginadoUC buscarBeneficiarioPaginadoUC;
+    private final BuscarBeneficiarioPaginadoUC buscarBeneficiarioPaginadoUC;
 
-	private final IniciarAtendimentoDemandaItemUC iniciarAtendimentoDemandaItemUC;
+    private final IniciarAtendimentoDemandaItemUC iniciarAtendimentoDemandaItemUC;
 
-	private final CadastrarDemandaItemUC cadastrarDemandaItemUC;
+    private final CadastrarDemandaItemUC cadastrarDemandaItemUC;
 
-	@Operation(summary = "Buscar beneficiários", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca beneficiários com paginação e por ordem de último atualizado")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarBeneficiarioPaginadoUC.BeneficiarioDTO.class)))),
-			@ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
-	})
-	@GetMapping
-	ResponseEntity<List<BuscarBeneficiarioPaginadoUC.BeneficiarioDTO>> BuscarBeneficiarios(
-			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "10") int size) {
+    @Operation(summary = "Buscar beneficiários", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca beneficiários com paginação e por ordem de último atualizado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarBeneficiarioPaginadoUC.BeneficiarioDTO.class)))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping
+    ResponseEntity<List<BuscarBeneficiarioPaginadoUC.BeneficiarioDTO>> BuscarBeneficiarios(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
-		return ResponseEntity.ok(buscarBeneficiarioPaginadoUC.executar(page, size));
-	}
+        return ResponseEntity.ok(buscarBeneficiarioPaginadoUC.executar(page, size));
+    }
 
-	@Operation(summary = "Inicia atendimento demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Inicia Atendimento de demanda, se mais de um provedor tentar pegar a mesma demanda ao mesmo tempo será lancaçado um erro de conflito")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO.class))),
-			@ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
-			@ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = String.class))),
-			@ApiResponse(responseCode = "422", content = @Content(schema = @Schema(implementation = String.class))),
-			@ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
-	})
-	@PostMapping("{beneficiarioId}/demandas-itens/{demandaItemId}/atendimentos")
-	ResponseEntity<IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO> iniciarAtendimentoDemanda(
-			@PathVariable UUID beneficiarioId,
-			@PathVariable UUID demandaItemId,
-			@RequestBody Integer quantidadeAtendimento) {
+    @Operation(summary = "Inicia atendimento demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Inicia Atendimento de demanda, se mais de um provedor tentar pegar a mesma demanda ao mesmo tempo será lancaçado um erro de conflito")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @PostMapping("{beneficiarioId}/demandas-itens/{demandaItemId}/atendimentos")
+    ResponseEntity<IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO> iniciarAtendimentoDemanda(
+            @PathVariable UUID beneficiarioId,
+            @PathVariable UUID demandaItemId,
+            @RequestBody Integer quantidadeAtendimento) {
 
-		IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO atendimento = iniciarAtendimentoDemandaItemUC
-				.executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
-						authenticationProvider.getAuthenticatedUserId(),
-						beneficiarioId,
-						demandaItemId,
-						quantidadeAtendimento));
+        IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO atendimento = iniciarAtendimentoDemandaItemUC
+                .executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
+                        authenticationProvider.getAuthenticatedUserId(),
+                        beneficiarioId,
+                        demandaItemId,
+                        quantidadeAtendimento));
 
-		return ResponseEntity
-				.created(URI.create(String.format("beneficiarios/%s/demandas-itens/%s/atendimentos/%s",
-						beneficiarioId.toString(),
-						demandaItemId.toString(),
-						atendimento)))
-				.body(atendimento);
+        return ResponseEntity
+                .created(URI.create(String.format("beneficiarios/%s/demandas-itens/%s/atendimentos/%s",
+                        beneficiarioId.toString(),
+                        demandaItemId.toString(),
+                        atendimento)))
+                .body(atendimento);
 
-	}
+    }
 
-	@Operation(summary = "Cadastrar nova demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Cadastra uma nova demanda por item, caso beneficiario não seja apadrinhado pelo mesmo padrinho que solicitou o cadastro, será lançado um 404 (Não existe beneficário com este padrinho)")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = CadastrarDemandaItemUC.DemandaItemDTO.class))),
-			@ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
-			@ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
-	})
-	@PostMapping("{beneficiarioId}/demandas-itens")
-	ResponseEntity<CadastrarDemandaItemUC.DemandaItemDTO> iniciarAtendimentoDemanda(
-			@PathVariable UUID beneficiarioId,
-			@RequestBody CadastrarDemandaItemUC.InformacoesItemDemandaItemDTO informacoes) {
+    @Operation(summary = "Cadastrar nova demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Cadastra uma nova demanda por item, caso beneficiario não seja apadrinhado pelo mesmo padrinho que solicitou o cadastro, será lançado um 404 (Não existe beneficário com este padrinho)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = CadastrarDemandaItemUC.DemandaItemDTO.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @PostMapping("{beneficiarioId}/demandas-itens")
+    ResponseEntity<CadastrarDemandaItemUC.DemandaItemDTO> iniciarAtendimentoDemanda(
+            @PathVariable UUID beneficiarioId,
+            @RequestBody CadastrarDemandaItemUC.InformacoesItemDemandaItemDTO informacoes) {
 
-		final CadastrarDemandaItemUC.DemandaItemDTO demandaItem = cadastrarDemandaItemUC
-				.executar(new CadastrarDemandaItemUC.NovaDemandaItemDTO(
-						authenticationProvider.getAuthenticatedUserId(),
-						beneficiarioId,
-						informacoes));
+        final CadastrarDemandaItemUC.DemandaItemDTO demandaItem = cadastrarDemandaItemUC
+                .executar(new CadastrarDemandaItemUC.NovaDemandaItemDTO(
+                        authenticationProvider.getAuthenticatedUserId(),
+                        beneficiarioId,
+                        informacoes));
 
-		return ResponseEntity
-				.created(URI.create(String.format("beneficiarios/%s/demandas-itens/%s",
-						beneficiarioId.toString(),
-						demandaItem.id().toString())))
-				.body(demandaItem);
+        return ResponseEntity
+                .created(URI.create(String.format("beneficiarios/%s/demandas-itens/%s",
+                        beneficiarioId.toString(),
+                        demandaItem.id().toString())))
+                .body(demandaItem);
 
-	}
+    }
 
 }
