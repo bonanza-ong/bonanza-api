@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
 import ong.bonanza.beneficiarioapi.domain.exception.AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException;
+import ong.bonanza.beneficiarioapi.domain.exception.RecursoInvalidoException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoNaoEncontradoException;
 
 @ControllerAdvice
@@ -55,6 +56,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException.class)
     public ResponseEntity<String> handle(AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(RecursoInvalidoException.class)
+    public ResponseEntity<String> handle(RecursoInvalidoException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
