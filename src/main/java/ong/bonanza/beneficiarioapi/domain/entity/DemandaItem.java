@@ -37,8 +37,14 @@ public class DemandaItem {
     private Beneficiario beneficiario;
 
     @NotNull
+    @ManyToOne
+    private Padrinho padrinho;
+
+    @NotNull
     private Integer quantidadeSolicitada;
 
+    @NotNull
+    @Column(columnDefinition = "integer DEFAULT 0", nullable = false)
     private Integer quantidadeAtendida;
 
     @NotNull

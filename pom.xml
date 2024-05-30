@@ -141,6 +141,9 @@
 						<compilerArg>
 							-Amapstruct.defaultComponentModel=spring
 						</compilerArg>
+						<compilerArg>
+							-Amapstruct.defaultInjectionStrategy=constructor
+						</compilerArg>
 					</compilerArgs>
 				</configuration>
 			</plugin>
