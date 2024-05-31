@@ -1,8 +1,7 @@
 package ong.bonanza.beneficiarioapi.domain.exception;
 
-import java.util.UUID;
-
 import ong.bonanza.beneficiarioapi.domain.entity.Pessoa;
+import ong.bonanza.beneficiarioapi.domain.entity.Usuario;
 
 public class PessoaNaoEncontradaException extends RecursoNaoEncontradoException {
 
@@ -10,8 +9,8 @@ public class PessoaNaoEncontradaException extends RecursoNaoEncontradoException 
         super(Pessoa.class, consulta);
     }
 
-    public static PessoaNaoEncontradaException buscaPorId(UUID id) {
-        return new PessoaNaoEncontradaException(String.format("[id=%s]", id.toString()));
+    public static PessoaNaoEncontradaException buscaPorUsuario(Usuario usuario) {
+        return new PessoaNaoEncontradaException(String.format("[usuarioId=%s]", usuario.getId().toString()));
     }
 
 }
