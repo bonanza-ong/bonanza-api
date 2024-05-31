@@ -68,7 +68,7 @@ public class BeneficiarioController {
 
         IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO atendimento = iniciarAtendimentoDemandaItemUC
                 .executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
-                        authenticationProvider.getAuthenticatedUserId(),
+                        authenticationProvider.authenticatedUserId(),
                         beneficiarioId,
                         demandaItemId,
                         quantidadeAtendimento));
@@ -95,7 +95,7 @@ public class BeneficiarioController {
 
         final CadastrarDemandaItemUC.DemandaItemDTO demandaItem = cadastrarDemandaItemUC
                 .executar(new CadastrarDemandaItemUC.NovaDemandaItemDTO(
-                        authenticationProvider.getAuthenticatedUserId(),
+                        authenticationProvider.authenticatedUserId(),
                         beneficiarioId,
                         informacoes));
 

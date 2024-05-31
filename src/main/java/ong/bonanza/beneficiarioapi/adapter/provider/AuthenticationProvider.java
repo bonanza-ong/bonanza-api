@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
@@ -11,7 +12,7 @@ import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
 @Component
 public class AuthenticationProvider {
 
-    public UUID getAuthenticatedUserId() {
+    public UUID authenticatedUserId() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -19,6 +20,22 @@ public class AuthenticationProvider {
             throw new UnauthorizedException();
 
         return UUID.fromString(authentication.getName());
+    }
+
+    public String token() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null)
+            throw new UnauthorizedException();
+
+        if (!(authentication.getCredentials() instanceof Jwt))
+            throw new UnauthorizedException();
+
+        Jwt jwt = (Jwt) authentication.getCredentials();
+
+        return jwt.getTokenValue();
+
     }
 
 }
