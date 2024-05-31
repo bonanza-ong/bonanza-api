@@ -10,6 +10,8 @@ import ong.bonanza.beneficiarioapi.domain.entity.Usuario;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, UUID> {
 
+    Boolean existsByUsuario(Usuario usuario);
+
     Optional<Pessoa> findByUsuario(Usuario usuario);
 
 }
