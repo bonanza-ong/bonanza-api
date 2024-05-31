@@ -11,6 +11,9 @@ import ong.bonanza.beneficiarioapi.domain.entity.Pessoa;
 
 public interface PadrinhoRepository extends JpaRepository<Padrinho, UUID> {
 
+    Boolean existsByPessoa(Pessoa pessoa);
+
+
     Optional<Padrinho> findByPessoaAndApadrinhadosContaining(Pessoa pessoa, Beneficiario beneficiario);
 
 }

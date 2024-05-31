@@ -16,6 +16,10 @@ public class PadrinhoService {
     private final PadrinhoRepository padrinhoRepository;
 
     public Padrinho cadastrar(Padrinho padrinho) {
+
+        if (padrinhoRepository.existsByPessoa(padrinho.getPessoa()))
+            throw PadrinhoJaExistenteException.comPessoa(padrinho.getPessoa());
+
         return padrinhoRepository.save(padrinho);
     }
 
