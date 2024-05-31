@@ -23,10 +23,16 @@ public class BuscarItensPaginadoUC {
     public record ItemDTO(
             UUID id, 
             String nome,
-            UUID categoriaPrincipalId,
-            List<UUID> categoriasId,
+            CategoriaItemDTO categoriaPrincipal,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
+    ) {
+    }
+    
+    public record CategoriaItemDTO(
+            UUID id,
+            String nome,
+            CategoriaItemDTO pai
     ) {
     }
     
