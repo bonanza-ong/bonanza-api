@@ -1,7 +1,11 @@
 package ong.bonanza.beneficiarioapi.domain.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -43,5 +47,11 @@ public class Padrinho {
     @ManyToMany
     @JoinTable(name = "padrinhos_apadrinhados", inverseJoinColumns = @JoinColumn(name = "beneficiario_id"))
     private List<Beneficiario> apadrinhados;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 }
