@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import ong.bonanza.beneficiarioapi.adapter.exception.ForbiddenException;
 import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
 import ong.bonanza.beneficiarioapi.domain.exception.AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoInvalidoException;
@@ -47,6 +48,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<String> handle(UnauthorizedException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<String> handle(ForbiddenException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)

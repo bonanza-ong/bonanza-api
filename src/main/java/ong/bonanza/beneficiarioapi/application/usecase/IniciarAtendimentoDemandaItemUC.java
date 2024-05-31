@@ -16,10 +16,13 @@ import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.PessoaService;
 import ong.bonanza.beneficiarioapi.domain.service.ProvedorService;
+import ong.bonanza.beneficiarioapi.domain.service.UsuarioService;
 
 @RequiredArgsConstructor
 @Component
 public class IniciarAtendimentoDemandaItemUC {
+
+    private final UsuarioService usuarioService;
 
     private final InciarAtendimentoDemandaItemUCMapper mapper;
 
@@ -42,11 +45,12 @@ public class IniciarAtendimentoDemandaItemUC {
                                 novoAtendimento.demandaItemId,
                                 beneficiarioService.buscarPorId(novoAtendimento.beneficiarioId)),
                         provedorService
-                                .buscarPorPessoa(pessoaService.buscarPorId(novoAtendimento.pessoaProvedoraId)))));
+                                .buscarPorPessoa(pessoaService.buscarPorUsuario(
+                                        usuarioService.buscarPorId(novoAtendimento.usuarioId))))));
     }
 
     public record NovoAtendimentoDemandaItem(
-            UUID pessoaProvedoraId,
+            UUID usuarioId,
             UUID beneficiarioId,
             UUID demandaItemId,
             Integer quantidadeAtendimento) {

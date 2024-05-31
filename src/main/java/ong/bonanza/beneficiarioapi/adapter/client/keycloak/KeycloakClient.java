@@ -11,6 +11,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.adapter.client.keycloak.dto.UserDTO;
 import ong.bonanza.beneficiarioapi.adapter.client.keycloak.dto.UserInfoDTO;
+import ong.bonanza.beneficiarioapi.adapter.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
 import ong.bonanza.beneficiarioapi.adapter.provider.AuthenticationProvider;
 import reactor.core.publisher.Mono;
 
@@ -33,7 +35,11 @@ public class KeycloakClient {
                 .header("Authorization", String.format("Bearer %s", authenticationProvider.token()))
                 .retrieve()
                 .bodyToMono(UserInfoDTO.class)
-                .onErrorResume(WebClientResponseException.class, exception -> Mono.empty())
+                .onErrorResume(WebClientResponseException.NotFound.class, notFound -> Mono.empty())
+                .onErrorResume(WebClientResponseException.Unauthorized.class,
+                        forbidden -> Mono.error(new UnauthorizedException()))
+                .onErrorResume(WebClientResponseException.Forbidden.class,
+                        forbidden -> Mono.error(new ForbiddenException()))
                 .blockOptional();
     }
 
@@ -47,6 +53,10 @@ public class KeycloakClient {
                 .retrieve()
                 .bodyToMono(UserDTO.class)
                 .onErrorResume(WebClientResponseException.NotFound.class, notFound -> Mono.empty())
+                .onErrorResume(WebClientResponseException.Unauthorized.class,
+                        forbidden -> Mono.error(new UnauthorizedException()))
+                .onErrorResume(WebClientResponseException.Forbidden.class,
+                        forbidden -> Mono.error(new ForbiddenException()))
                 .blockOptional();
     }
 
@@ -61,6 +71,10 @@ public class KeycloakClient {
                 .header("Authorization", String.format("Bearer %s", authenticationProvider.token()))
                 .retrieve()
                 .bodyToFlux(UserDTO.class)
+                .onErrorResume(WebClientResponseException.Unauthorized.class,
+                        forbidden -> Mono.error(new UnauthorizedException()))
+                .onErrorResume(WebClientResponseException.Forbidden.class,
+                        forbidden -> Mono.error(new ForbiddenException()))
                 .collectList()
                 .block();
     }

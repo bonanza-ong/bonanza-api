@@ -17,10 +17,13 @@ import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.ItemService;
 import ong.bonanza.beneficiarioapi.domain.service.PadrinhoService;
 import ong.bonanza.beneficiarioapi.domain.service.PessoaService;
+import ong.bonanza.beneficiarioapi.domain.service.UsuarioService;
 
 @RequiredArgsConstructor
 @Component
 public class CadastrarDemandaItemUC {
+
+    private final UsuarioService usuarioService;
 
     private final BeneficiarioService beneficiarioService;
 
@@ -40,7 +43,8 @@ public class CadastrarDemandaItemUC {
 
         return mapper.toDemandaItemDTO(demandaItemService.cadastrar(mapper.toDemandaItem(
                 padrinhoService.buscarPorPessoaEBeneficiario(
-                        pessoaService.buscarPorId(novaDemandaItem.pessoaPadrinhoId), beneficiario),
+                        pessoaService.buscarPorUsuario(usuarioService.buscarPorId(novaDemandaItem.usuarioId)),
+                        beneficiario),
                 beneficiario,
                 itemService.buscarPorId(novaDemandaItem.informacoesItem.itemId),
                 novaDemandaItem)));
@@ -56,7 +60,7 @@ public class CadastrarDemandaItemUC {
     }
 
     public record NovaDemandaItemDTO(
-            UUID pessoaPadrinhoId,
+            UUID usuarioId,
             UUID beneficiarioId,
             InformacoesItemDemandaItemDTO informacoesItem) {
     }

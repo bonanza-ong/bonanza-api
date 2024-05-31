@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.domain.entity.Usuario;
-import ong.bonanza.beneficiarioapi.domain.service.UsuarioService;
+import ong.bonanza.beneficiarioapi.domain.service.GerenciadorAdministrativoDeUsuariosService;
 
 @RequiredArgsConstructor
 @Component
@@ -16,10 +16,11 @@ public class BuscarUsuariosPorEmailUC {
 
     private final BuscarUsuariosPorEmailUCMapper mapper;
 
-    private final UsuarioService usuarioService;
+    private final GerenciadorAdministrativoDeUsuariosService gerenciadorAdministrativoDeUsuariosService;
 
     public List<UsuarioDTO> executar(ParametrosBuscaDTO parametros) {
-        return mapper.toUsuarioDTOList(usuarioService.buscarPorEmail(parametros.email, parametros.max));
+        return mapper.toUsuarioDTOList(
+                gerenciadorAdministrativoDeUsuariosService.buscarPorEmail(parametros.email, parametros.max));
     }
 
     public record ParametrosBuscaDTO(String email, Integer max) {

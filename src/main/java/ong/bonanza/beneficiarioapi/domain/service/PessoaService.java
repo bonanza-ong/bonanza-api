@@ -1,11 +1,10 @@
 package ong.bonanza.beneficiarioapi.domain.service;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.domain.entity.Pessoa;
+import ong.bonanza.beneficiarioapi.domain.entity.Usuario;
 import ong.bonanza.beneficiarioapi.domain.exception.PessoaNaoEncontradaException;
 import ong.bonanza.beneficiarioapi.domain.repository.PessoaRepository;
 
@@ -15,10 +14,14 @@ public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-    public Pessoa buscarPorId(UUID id) {
+    public Pessoa cadastrar(Pessoa pessoa) {
+        return pessoaRepository.save(pessoa);
+    }
+
+    public Pessoa buscarPorUsuario(Usuario usuario) {
         return pessoaRepository
-                .findById(id)
-                .orElseThrow(() -> PessoaNaoEncontradaException.buscaPorId(id));
+                .findByUsuario(usuario)
+                .orElseThrow(() -> PessoaNaoEncontradaException.buscaPorUsuario(usuario));
     }
 
 }
