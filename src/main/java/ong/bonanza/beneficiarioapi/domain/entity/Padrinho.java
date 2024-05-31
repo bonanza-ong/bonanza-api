@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -16,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ong.bonanza.beneficiarioapi.domain.enumeration.StatusPadrinho;
 
 @Getter
 @Setter
@@ -32,6 +35,10 @@ public class Padrinho {
     @OneToOne
     @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private StatusPadrinho status;
 
     @ManyToMany
     @JoinTable(name = "padrinhos_apadrinhados", inverseJoinColumns = @JoinColumn(name = "beneficiario_id"))
