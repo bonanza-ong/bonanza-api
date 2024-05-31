@@ -19,6 +19,10 @@ spring:
         jwt:
           issuer-uri: http://localhost:8090/realms/bonanza
 
+keycloak:
+  url: http://localhost:8090
+  realm: bonanza
+
 springdoc:
   use-fqn: true
   default-produces-media-type: application/json
