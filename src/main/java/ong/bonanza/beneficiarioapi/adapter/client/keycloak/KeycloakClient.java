@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.adapter.client.keycloak.dto.UserDTO;
+import ong.bonanza.beneficiarioapi.adapter.client.keycloak.dto.UserInfoDTO;
 import ong.bonanza.beneficiarioapi.adapter.provider.AuthenticationProvider;
 import reactor.core.publisher.Mono;
 
@@ -22,6 +23,19 @@ public class KeycloakClient {
     private final String realm;
 
     private final AuthenticationProvider authenticationProvider;
+
+    public Optional<UserInfoDTO> userInfo() {
+        return webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/realms/{realm}/protocol/openid-connect/userinfo")
+                        .build(realm))
+                .header("Authorization", String.format("Bearer %s", authenticationProvider.token()))
+                .retrieve()
+                .bodyToMono(UserInfoDTO.class)
+                .onErrorResume(WebClientResponseException.class, exception -> Mono.empty())
+                .blockOptional();
+    }
 
     public Optional<UserDTO> buscarUsuarioPorId(UUID id) {
         return webClient
