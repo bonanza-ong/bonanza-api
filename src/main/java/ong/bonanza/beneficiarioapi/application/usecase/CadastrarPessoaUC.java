@@ -39,7 +39,6 @@ public class CadastrarPessoaUC {
     public interface CadastrarPessoaUCMapper {
 
         @Mapping(target = "createdAt", ignore = true)
-        @Mapping(target = "endereco", ignore = true)
         @Mapping(target = "updatedAt", ignore = true)
         @Mapping(target = "usuario", source = "usuario")
         Pessoa toPessoa(Usuario usuario, String nome);

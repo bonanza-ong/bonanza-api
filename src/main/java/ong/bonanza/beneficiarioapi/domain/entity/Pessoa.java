@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -36,9 +35,6 @@ public class Pessoa {
 
     @NotBlank
     private String nome;
-
-    @ManyToOne
-    private Endereco endereco;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
