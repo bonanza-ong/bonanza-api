@@ -13,6 +13,7 @@ import ong.bonanza.beneficiarioapi.adapter.exception.ForbiddenException;
 import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
 import ong.bonanza.beneficiarioapi.domain.exception.AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoInvalidoException;
+import ong.bonanza.beneficiarioapi.domain.exception.RecursoJaExistenteException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoNaoEncontradoException;
 
 @ControllerAdvice
@@ -58,6 +59,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<String> handle(RecursoNaoEncontradoException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RecursoJaExistenteException.class)
+    public ResponseEntity<String> handle(RecursoJaExistenteException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException.class)
