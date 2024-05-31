@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import ong.bonanza.beneficiarioapi.application.usecase.BuscarBeneficiariosPaginadoUC;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.adapter.provider.AuthenticationProvider;
-import ong.bonanza.beneficiarioapi.application.usecase.BuscarBeneficiarioPaginadoUC;
 import ong.bonanza.beneficiarioapi.application.usecase.IniciarAtendimentoDemandaItemUC;
 
 @RestController
@@ -32,21 +32,21 @@ public class BeneficiarioController {
 
 	private final AuthenticationProvider authenticationProvider;
 
-	private final BuscarBeneficiarioPaginadoUC buscarBeneficiarioPaginadoUC;
+	private final BuscarBeneficiariosPaginadoUC buscarBeneficiariosPaginadoUC;
 
 	private final IniciarAtendimentoDemandaItemUC iniciarAtendimentoDemandaItemUC;
 
 	@Operation(summary = "Buscar beneficiários", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca beneficiários com paginação e por ordem de último atualizado")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarBeneficiarioPaginadoUC.BeneficiarioDTO.class)))),
+			@ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarBeneficiariosPaginadoUC.BeneficiarioDTO.class)))),
 			@ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
 	})
 	@GetMapping
-	ResponseEntity<List<BuscarBeneficiarioPaginadoUC.BeneficiarioDTO>> BuscarBeneficiarios(
+	ResponseEntity<List<BuscarBeneficiariosPaginadoUC.BeneficiarioDTO>> BuscarBeneficiarios(
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
 
-		return ResponseEntity.ok(buscarBeneficiarioPaginadoUC.executar(page, size));
+		return ResponseEntity.ok(buscarBeneficiariosPaginadoUC.executar(page, size));
 	}
 
 	@Operation(summary = "Inicia atendimento demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Inicia Atendimento de demanda, se mais de um provedor tentar pegar a mesma demanda ao mesmo tempo será lancaçado um erro de conflito")

@@ -12,7 +12,7 @@ import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 
 @RequiredArgsConstructor
 @Component
-public class BuscarBeneficiarioPaginadoUC {
+public class BuscarBeneficiariosPaginadoUC {
 
     private final BuscarBeneficiariosPaginadoUCMapper mapper;
 
