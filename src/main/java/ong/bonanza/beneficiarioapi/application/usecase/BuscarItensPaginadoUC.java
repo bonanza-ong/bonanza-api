@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class BuscarItemPaginadoUC {
+public class BuscarItensPaginadoUC {
     private final ItemService itemService;
     private final BuscarItensPaginadoUCMapper mapper;
     
