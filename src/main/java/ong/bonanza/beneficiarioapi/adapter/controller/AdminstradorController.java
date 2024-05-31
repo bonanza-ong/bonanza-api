@@ -44,7 +44,7 @@ public class AdminstradorController {
 
         @Operation(summary = "Busca por todos os itens, podendo filtrar por nome", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca por todos os itens utilizando de paginação e ordem de último atualizado")
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarItensPaginadoUC.class)))),
+                        @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarItensPaginadoUC.ItemDTO.class)))),
                         @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
         })
         @GetMapping("/itens")
