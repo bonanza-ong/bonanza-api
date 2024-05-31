@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,8 +55,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping
-    public ResponseEntity<Void> cadastrarse(
-            @RequestBody String nome) {
+    public ResponseEntity<Void> cadastrarse() {
 
         final UUID usuarioId = autoCadastrarUsuarioUC.executar();
 
