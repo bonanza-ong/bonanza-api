@@ -26,11 +26,11 @@ public class CadastrarPadrinhoUC {
 
     private final PadrinhoService padrinhoService;
 
-    public UUID executar(UUID usuarioId) {
+    public UUID executar(UUID usuarioId, StatusPadrinho status) {
         return padrinhoService
                 .cadastrar(mapper.toPadrinho(pessoaService.buscarPorUsuario(
                         usuarioService.buscarPorId(usuarioId)),
-                        StatusPadrinho.VERIFICADO))
+                        status))
                 .getId();
     }
 
