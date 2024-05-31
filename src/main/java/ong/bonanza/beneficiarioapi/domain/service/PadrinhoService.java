@@ -15,6 +15,10 @@ public class PadrinhoService {
 
     private final PadrinhoRepository padrinhoRepository;
 
+    public Padrinho cadastrar(Padrinho padrinho) {
+        return padrinhoRepository.save(padrinho);
+    }
+
     public Padrinho buscarPorPessoaEBeneficiario(Pessoa pessoa, Beneficiario beneficiario) {
         return padrinhoRepository
                 .findByPessoaAndApadrinhadosContaining(pessoa, beneficiario)
