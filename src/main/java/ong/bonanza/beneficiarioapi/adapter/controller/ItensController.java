@@ -20,8 +20,8 @@ import ong.bonanza.beneficiarioapi.application.usecase.CadastrarItemUC;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("administrador")
-public class AdminstradorController {
+@RequestMapping("itens")
+public class ItensController {
 
         private final CadastrarItemUC cadastrarItemUC;
         private final BuscarItensPaginadoUC buscarItensPaginadoUC;
@@ -32,7 +32,7 @@ public class AdminstradorController {
                         @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
                         @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
         })
-        @PostMapping("/itens")
+        @PostMapping
         public ResponseEntity<CadastrarItemUC.ItemDTO> cadastrarItem(@RequestBody CadastrarItemUC.NovoItemDTO item) {
 
                 CadastrarItemUC.ItemDTO itemCriado = cadastrarItemUC.executar(item);
@@ -47,7 +47,7 @@ public class AdminstradorController {
                         @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarItensPaginadoUC.ItemDTO.class)))),
                         @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
         })
-        @GetMapping("/itens")
+        @GetMapping
         public ResponseEntity<List<BuscarItensPaginadoUC.ItemDTO>> buscarItemPaginado(
                         @RequestParam(value = "page", defaultValue = "0") int page,
                         @RequestParam(value = "size", defaultValue = "10") int size,
