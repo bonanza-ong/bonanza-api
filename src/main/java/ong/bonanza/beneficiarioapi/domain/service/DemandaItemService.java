@@ -30,10 +30,12 @@ public class DemandaItemService {
 
         if (demandaItem.getQuantidadeSolicitada() < 1)
             throw new DemandaItemInvalidoException(
-                    new Atributo("quantidadeSolicitada", demandaItem.getQuantidadeSolicitada().toString(), "Deve ser maior que zero"));
+                    new Atributo("quantidadeSolicitada", demandaItem.getQuantidadeSolicitada().toString(),
+                            "Deve ser maior que zero"));
 
         demandaItem.setStatus(StatusDemandaItem.AGUARDANDO_CONFIRMACAO);
         demandaItem.setQuantidadeAtendida(0);
+        demandaItem.setVersionNum(0L);
         return demandaItemRepository.save(demandaItem);
     }
 
