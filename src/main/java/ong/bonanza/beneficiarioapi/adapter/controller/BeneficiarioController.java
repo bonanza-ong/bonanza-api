@@ -64,11 +64,13 @@ public class BeneficiarioController {
     ResponseEntity<IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO> iniciarAtendimentoDemanda(
             @PathVariable UUID beneficiarioId,
             @PathVariable UUID demandaItemId,
+            @RequestParam(value = "usuarioAtendimentoId", required = false) UUID usuarioAtendimentoId,
             @RequestBody Integer quantidadeAtendimento) {
 
         IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO atendimento = iniciarAtendimentoDemandaItemUC
                 .executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
-                        authenticationProvider.authenticatedUserId(),
+                        usuarioAtendimentoId == null ? authenticationProvider.authenticatedUserId()
+                                : usuarioAtendimentoId,
                         beneficiarioId,
                         demandaItemId,
                         quantidadeAtendimento));

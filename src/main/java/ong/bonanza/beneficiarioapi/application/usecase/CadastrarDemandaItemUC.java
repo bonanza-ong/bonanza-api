@@ -37,8 +37,8 @@ public class CadastrarDemandaItemUC {
 
     public DemandaItemDTO executar(NovaDemandaItemDTO novaDemandaItem) {
 
-        if (!authService.possuiAlgumaRole("administrador")
-                && !novaDemandaItem.solicitanteId.equals(authService.idUsuarioAutenticado()))
+        if (authService.possuiAlgumaRole("administrador")
+                || novaDemandaItem.solicitanteId.equals(authService.idUsuarioAutenticado()))
             throw new ForbiddenException("cadastrar demanda por outro usuário");
 
         final Beneficiario beneficiario = beneficiarioService.buscarPorId(novaDemandaItem.beneficiarioId);
