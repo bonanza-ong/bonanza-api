@@ -36,7 +36,7 @@ public class PadrinhoController {
 
     private final BuscarPadrinhosPorStatusUC buscarPadrinhosPorStatusUC;
 
-    @Operation(summary = "Cadastrar-se como padrinho na Base de Dados", security = @SecurityRequirement(name = "bearerAuth"), description = "Se cadastra na base através de seu token de acesso")
+    @Operation(summary = "Cadastrar padrinho na Base de Dados", security = @SecurityRequirement(name = "bearerAuth"), description = "Se cadastra na base através de seu token de acesso, ou cadastra um outro padrinho")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = CadastrarPessoaUC.PessoaDTO.class))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
@@ -45,10 +45,12 @@ public class PadrinhoController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping
-    public ResponseEntity<UUID> cadastrarse() {
+    public ResponseEntity<UUID> cadastrar(@RequestParam(value = "usuarioId", required = false) UUID usuarioId) {
 
         final UUID padrinhoId = cadastrarPadrinhoUC
-                .executar(authenticationProvider.authenticatedUserId(), StatusPadrinho.AGUARDANDO_VERIFICACAO);
+                .executar(
+                        usuarioId == null ? authenticationProvider.authenticatedUserId() : usuarioId,
+                        StatusPadrinho.AGUARDANDO_VERIFICACAO);
 
         return ResponseEntity
                 .created(URI.create(String.format("padrinhos/%s", padrinhoId.toString())))

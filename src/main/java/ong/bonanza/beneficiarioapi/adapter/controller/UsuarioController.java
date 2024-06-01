@@ -62,8 +62,7 @@ public class UsuarioController {
 
         return ResponseEntity
                 .created(URI.create(String.format("usuarios/informacoes", cadastrarUsuarioUC
-                        .executar(usuarioId == null ? authenticationProvider.authenticatedUserId()
-                                : usuarioId)
+                        .executar(usuarioId == null ? authenticationProvider.authenticatedUserId() : usuarioId)
                         .toString())))
                 .build();
 

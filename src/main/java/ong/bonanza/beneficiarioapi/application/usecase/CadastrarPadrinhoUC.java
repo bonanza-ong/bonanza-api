@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.application.service.AuthService;
 import ong.bonanza.beneficiarioapi.domain.entity.Padrinho;
 import ong.bonanza.beneficiarioapi.domain.entity.Pessoa;
 import ong.bonanza.beneficiarioapi.domain.enumeration.StatusPadrinho;
@@ -18,6 +20,8 @@ import ong.bonanza.beneficiarioapi.domain.service.UsuarioService;
 @Component
 public class CadastrarPadrinhoUC {
 
+    private final AuthService authService;
+
     private final CadastrarPadrinhoUCMapper mapper;
 
     private final UsuarioService usuarioService;
@@ -27,6 +31,11 @@ public class CadastrarPadrinhoUC {
     private final PadrinhoService padrinhoService;
 
     public UUID executar(UUID usuarioId, StatusPadrinho status) {
+
+        if (!(authService.possuiAlgumaRole("administrador")
+                || usuarioId.equals(authService.idUsuarioAutenticado())))
+            throw new ForbiddenException("cadastrar outro padrinho");
+
         return padrinhoService
                 .cadastrar(mapper.toPadrinho(pessoaService.buscarPorUsuario(
                         usuarioService.buscarPorId(usuarioId)),

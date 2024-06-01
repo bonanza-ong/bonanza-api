@@ -1,11 +1,13 @@
 package ong.bonanza.beneficiarioapi.adapter.controller;
 
 import java.net.URI;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +29,7 @@ public class PessoaController {
 
     private final CadastrarPessoaUC cadastrarPessoaUC;
 
-    @Operation(summary = "Cadastrar-se como pessoa na Base de Dados", security = @SecurityRequirement(name = "bearerAuth"), description = "Se cadastra na base através de seu token de acesso")
+    @Operation(summary = "Cadastrar pessoa na Base de Dados", security = @SecurityRequirement(name = "bearerAuth"), description = "Se cadastra na base através de seu token de acesso, ou cadastra um outra pessoa")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = CadastrarPessoaUC.PessoaDTO.class))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
@@ -36,11 +38,14 @@ public class PessoaController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping
-    public ResponseEntity<CadastrarPessoaUC.PessoaDTO> cadastrarse(
-            @RequestBody String nome) {
+    public ResponseEntity<CadastrarPessoaUC.PessoaDTO> cadastrar(
+            @RequestBody String nome,
+            @RequestParam(value = "usuarioId", required = false) UUID usuarioId) {
 
         final CadastrarPessoaUC.PessoaDTO pessoa = cadastrarPessoaUC
-                .executar(new CadastrarPessoaUC.NovaPessoaDTO(authenticationProvider.authenticatedUserId(), nome));
+                .executar(new CadastrarPessoaUC.NovaPessoaDTO(
+                        usuarioId == null ? authenticationProvider.authenticatedUserId() : usuarioId,
+                        nome));
 
         return ResponseEntity
                 .created(URI.create(String.format("pessoas/%s", pessoa.id().toString())))
