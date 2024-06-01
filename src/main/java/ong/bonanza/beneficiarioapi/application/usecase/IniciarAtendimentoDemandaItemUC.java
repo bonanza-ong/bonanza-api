@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.application.service.AuthService;
 import ong.bonanza.beneficiarioapi.domain.entity.AtendimentoDemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.Provedor;
@@ -21,6 +23,8 @@ import ong.bonanza.beneficiarioapi.domain.service.UsuarioService;
 @RequiredArgsConstructor
 @Component
 public class IniciarAtendimentoDemandaItemUC {
+
+    private final AuthService authService;
 
     private final UsuarioService usuarioService;
 
@@ -37,6 +41,11 @@ public class IniciarAtendimentoDemandaItemUC {
     private final BeneficiarioService beneficiarioService;
 
     public AtendimentoDemandaItemDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
+
+        if (authService.possuiAlgumaRole("administrador")
+                || novoAtendimento.usuarioId.equals(authService.idUsuarioAutenticado()))
+            throw new ForbiddenException("atender demanda por outro usuário");
+
         return mapper.toAtendimentoDemandaItemDTO(
                 novoAtendimento.quantidadeAtendimento,
                 atendimentoDemandaItemService.inciar(mapper.toAtendimentoDemandaItem(
