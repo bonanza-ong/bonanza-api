@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.domain.client.AuthClient;
 import ong.bonanza.beneficiarioapi.domain.entity.Usuario;
+import ong.bonanza.beneficiarioapi.domain.exception.UsuarioJaExistenteException;
 import ong.bonanza.beneficiarioapi.domain.exception.UsuarioNaoEncontradoException;
 import ong.bonanza.beneficiarioapi.domain.repository.UsuarioRepository;
 
@@ -25,6 +26,10 @@ public class UsuarioService {
     }
 
     public Usuario cadastrar(Usuario usuario) {
+
+        if (usuarioRepository.existsById(usuario.getId()))
+            throw UsuarioJaExistenteException.comId(usuario.getId());
+
         return usuarioRepository.save(usuario);
     }
 

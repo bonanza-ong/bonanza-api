@@ -32,13 +32,16 @@ public class DemandaItem {
     @GeneratedValue
     private UUID id;
 
-    @NotNull
     @ManyToOne
-    private Beneficiario beneficiario;
+    private Usuario aprovador;
 
     @NotNull
     @ManyToOne
-    private Padrinho padrinho;
+    private Usuario solicitante;
+
+    @NotNull
+    @ManyToOne
+    private Beneficiario beneficiario;
 
     @NotNull
     private Integer quantidadeSolicitada;

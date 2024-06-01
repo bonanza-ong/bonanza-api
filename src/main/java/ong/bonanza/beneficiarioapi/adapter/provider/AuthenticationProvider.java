@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
+import ong.bonanza.beneficiarioapi.application.exception.UnauthorizedException;
 
 @Component
 public class AuthenticationProvider {
@@ -36,6 +36,21 @@ public class AuthenticationProvider {
 
         return jwt.getTokenValue();
 
+    }
+
+    public boolean hasRole(String role) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null)
+            throw new UnauthorizedException();
+
+        final String _role = String.format("ROLE_%s", role);
+
+        return authentication
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> authority.getAuthority().toUpperCase().equals(_role));
     }
 
 }

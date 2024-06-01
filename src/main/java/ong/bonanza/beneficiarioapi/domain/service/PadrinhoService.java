@@ -7,12 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import ong.bonanza.beneficiarioapi.domain.entity.Beneficiario;
 import ong.bonanza.beneficiarioapi.domain.entity.Padrinho;
-import ong.bonanza.beneficiarioapi.domain.entity.Pessoa;
 import ong.bonanza.beneficiarioapi.domain.enumeration.StatusPadrinho;
 import ong.bonanza.beneficiarioapi.domain.exception.PadrinhoJaExistenteException;
-import ong.bonanza.beneficiarioapi.domain.exception.PadrinhoNaoEncontradoException;
 import ong.bonanza.beneficiarioapi.domain.repository.PadrinhoRepository;
 
 @RequiredArgsConstructor
@@ -27,12 +24,6 @@ public class PadrinhoService {
             throw PadrinhoJaExistenteException.comPessoa(padrinho.getPessoa());
 
         return padrinhoRepository.save(padrinho);
-    }
-
-    public Padrinho buscarPorPessoaEBeneficiario(Pessoa pessoa, Beneficiario beneficiario) {
-        return padrinhoRepository
-                .findByPessoaAndApadrinhadosContaining(pessoa, beneficiario)
-                .orElseThrow(() -> PadrinhoNaoEncontradoException.buscaPorPessoaEBeneficiario(pessoa, beneficiario));
     }
 
     public List<Padrinho> buscarPorStatus(StatusPadrinho status, int page, int size) {

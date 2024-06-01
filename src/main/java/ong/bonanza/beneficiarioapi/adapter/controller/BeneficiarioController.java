@@ -91,11 +91,15 @@ public class BeneficiarioController {
     @PostMapping("{beneficiarioId}/demandas-itens")
     ResponseEntity<CadastrarDemandaItemUC.DemandaItemDTO> iniciarAtendimentoDemanda(
             @PathVariable UUID beneficiarioId,
+            @RequestParam(value = "usuarioSolicitanteId", required = false) UUID usuarioSolicitanteId,
             @RequestBody CadastrarDemandaItemUC.InformacoesItemDemandaItemDTO informacoes) {
+
+        UUID solicitanteId = usuarioSolicitanteId == null ? authenticationProvider.authenticatedUserId()
+                : usuarioSolicitanteId;
 
         final CadastrarDemandaItemUC.DemandaItemDTO demandaItem = cadastrarDemandaItemUC
                 .executar(new CadastrarDemandaItemUC.NovaDemandaItemDTO(
-                        authenticationProvider.authenticatedUserId(),
+                        solicitanteId,
                         beneficiarioId,
                         informacoes));
 

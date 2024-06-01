@@ -11,9 +11,9 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.adapter.client.keycloak.dto.UserDTO;
 import ong.bonanza.beneficiarioapi.adapter.client.keycloak.dto.UserInfoDTO;
-import ong.bonanza.beneficiarioapi.adapter.exception.ForbiddenException;
-import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
 import ong.bonanza.beneficiarioapi.adapter.provider.AuthenticationProvider;
+import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.application.exception.UnauthorizedException;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class KeycloakClient {
                 .onErrorResume(WebClientResponseException.Unauthorized.class,
                         forbidden -> Mono.error(new UnauthorizedException()))
                 .onErrorResume(WebClientResponseException.Forbidden.class,
-                        forbidden -> Mono.error(new ForbiddenException()))
+                        forbidden -> Mono.error(new ForbiddenException("acessar user-info")))
                 .blockOptional();
     }
 
@@ -56,7 +56,7 @@ public class KeycloakClient {
                 .onErrorResume(WebClientResponseException.Unauthorized.class,
                         forbidden -> Mono.error(new UnauthorizedException()))
                 .onErrorResume(WebClientResponseException.Forbidden.class,
-                        forbidden -> Mono.error(new ForbiddenException()))
+                        forbidden -> Mono.error(new ForbiddenException("buscar por usuario por ID")))
                 .blockOptional();
     }
 
@@ -74,7 +74,7 @@ public class KeycloakClient {
                 .onErrorResume(WebClientResponseException.Unauthorized.class,
                         forbidden -> Mono.error(new UnauthorizedException()))
                 .onErrorResume(WebClientResponseException.Forbidden.class,
-                        forbidden -> Mono.error(new ForbiddenException()))
+                        forbidden -> Mono.error(new ForbiddenException("buscar usuarios")))
                 .collectList()
                 .block();
     }

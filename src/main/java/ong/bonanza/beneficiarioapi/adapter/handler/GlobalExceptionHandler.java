@@ -9,8 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import ong.bonanza.beneficiarioapi.adapter.exception.ForbiddenException;
-import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
+import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.application.exception.UnauthorizedException;
 import ong.bonanza.beneficiarioapi.domain.exception.AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoInvalidoException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoJaExistenteException;
