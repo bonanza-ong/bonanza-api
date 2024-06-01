@@ -50,7 +50,7 @@ public class AuthenticationProvider {
         return authentication
                 .getAuthorities()
                 .stream()
-                .anyMatch(authority -> authority.getAuthority().toUpperCase().equals(_role));
+                .anyMatch(authority -> authority.getAuthority().toUpperCase().equals(_role.toUpperCase()));
     }
 
 }

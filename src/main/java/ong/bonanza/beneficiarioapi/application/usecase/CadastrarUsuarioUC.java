@@ -24,8 +24,8 @@ public class CadastrarUsuarioUC {
 
     public UUID executar(UUID usuarioId) {
 
-        if (authService.possuiAlgumaRole("administrador")
-                || usuarioId.equals(authService.idUsuarioAutenticado()))
+        if (!(authService.possuiAlgumaRole("administrador")
+                || usuarioId.equals(authService.idUsuarioAutenticado())))
             throw new ForbiddenException("cadastrar outro usuário");
 
         return usuarioService.cadastrar(mapper.toUsuario(usuarioId)).getId();
