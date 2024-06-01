@@ -19,7 +19,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import ong.bonanza.beneficiarioapi.application.usecase.AutoCadastrarUsuarioUC;
+import ong.bonanza.beneficiarioapi.application.usecase.CadastrarUsuarioUC;
+import ong.bonanza.beneficiarioapi.adapter.provider.AuthenticationProvider;
 import ong.bonanza.beneficiarioapi.application.usecase.BuscarUsuariosPorEmailUC;
 
 @RequiredArgsConstructor
@@ -27,9 +28,11 @@ import ong.bonanza.beneficiarioapi.application.usecase.BuscarUsuariosPorEmailUC;
 @RequestMapping("usuarios")
 public class UsuarioController {
 
+    private final AuthenticationProvider authenticationProvider;
+
     private final BuscarUsuariosPorEmailUC buscarUsuariosPorEmailUC;
 
-    private final AutoCadastrarUsuarioUC autoCadastrarUsuarioUC;
+    private final CadastrarUsuarioUC cadastrarUsuarioUC;
 
     @Operation(summary = "Buscar usuários", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca usuários cadastrados no sistema")
     @ApiResponses(value = {
@@ -46,7 +49,7 @@ public class UsuarioController {
 
     }
 
-    @Operation(summary = "Cadastrar-se como usuário na Base de Dados", security = @SecurityRequirement(name = "bearerAuth"), description = "Se cadastra na base através de seu token de acesso")
+    @Operation(summary = "Cadastrar usuário na Base de Dados", security = @SecurityRequirement(name = "bearerAuth"), description = "Se cadastra na base através de seu token de acesso, ou cadastra um outro usuario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = Void.class))),
             @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
@@ -55,12 +58,13 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping
-    public ResponseEntity<Void> cadastrarse() {
-
-        final UUID usuarioId = autoCadastrarUsuarioUC.executar();
+    public ResponseEntity<Void> cadastrar(@RequestParam(value = "usuarioId", required = false) UUID usuarioId) {
 
         return ResponseEntity
-                .created(URI.create(String.format("usuarios/informacoes", usuarioId.toString())))
+                .created(URI.create(String.format("usuarios/informacoes", cadastrarUsuarioUC
+                        .executar(usuarioId == null ? authenticationProvider.authenticatedUserId()
+                                : usuarioId)
+                        .toString())))
                 .build();
 
     }
