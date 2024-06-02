@@ -1,4 +1,4 @@
-package ong.bonanza.beneficiarioapi.adapter.exception;
+package ong.bonanza.beneficiarioapi.application.exception;
 
 public class UnauthorizedException extends RuntimeException {
 

@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.application.service.AuthService;
 import ong.bonanza.beneficiarioapi.domain.entity.AtendimentoDemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.Provedor;
@@ -16,10 +18,15 @@ import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.PessoaService;
 import ong.bonanza.beneficiarioapi.domain.service.ProvedorService;
+import ong.bonanza.beneficiarioapi.domain.service.UsuarioService;
 
 @RequiredArgsConstructor
 @Component
 public class IniciarAtendimentoDemandaItemUC {
+
+    private final AuthService authService;
+
+    private final UsuarioService usuarioService;
 
     private final InciarAtendimentoDemandaItemUCMapper mapper;
 
@@ -34,6 +41,11 @@ public class IniciarAtendimentoDemandaItemUC {
     private final BeneficiarioService beneficiarioService;
 
     public AtendimentoDemandaItemDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
+
+        if (authService.possuiAlgumaRole("administrador")
+                || novoAtendimento.usuarioId.equals(authService.idUsuarioAutenticado()))
+            throw new ForbiddenException("atender demanda por outro usuário");
+
         return mapper.toAtendimentoDemandaItemDTO(
                 novoAtendimento.quantidadeAtendimento,
                 atendimentoDemandaItemService.inciar(mapper.toAtendimentoDemandaItem(
@@ -42,11 +54,12 @@ public class IniciarAtendimentoDemandaItemUC {
                                 novoAtendimento.demandaItemId,
                                 beneficiarioService.buscarPorId(novoAtendimento.beneficiarioId)),
                         provedorService
-                                .buscarPorPessoa(pessoaService.buscarPorId(novoAtendimento.pessoaProvedoraId)))));
+                                .buscarPorPessoa(pessoaService.buscarPorUsuario(
+                                        usuarioService.buscarPorId(novoAtendimento.usuarioId))))));
     }
 
     public record NovoAtendimentoDemandaItem(
-            UUID pessoaProvedoraId,
+            UUID usuarioId,
             UUID beneficiarioId,
             UUID demandaItemId,
             Integer quantidadeAtendimento) {

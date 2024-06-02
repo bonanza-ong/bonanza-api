@@ -10,7 +10,10 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.adapter.client.keycloak.dto.UserDTO;
+import ong.bonanza.beneficiarioapi.adapter.client.keycloak.dto.UserInfoDTO;
 import ong.bonanza.beneficiarioapi.adapter.provider.AuthenticationProvider;
+import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.application.exception.UnauthorizedException;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -23,6 +26,23 @@ public class KeycloakClient {
 
     private final AuthenticationProvider authenticationProvider;
 
+    public Optional<UserInfoDTO> userInfo() {
+        return webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/realms/{realm}/protocol/openid-connect/userinfo")
+                        .build(realm))
+                .header("Authorization", String.format("Bearer %s", authenticationProvider.token()))
+                .retrieve()
+                .bodyToMono(UserInfoDTO.class)
+                .onErrorResume(WebClientResponseException.NotFound.class, notFound -> Mono.empty())
+                .onErrorResume(WebClientResponseException.Unauthorized.class,
+                        forbidden -> Mono.error(new UnauthorizedException()))
+                .onErrorResume(WebClientResponseException.Forbidden.class,
+                        forbidden -> Mono.error(new ForbiddenException("acessar user-info")))
+                .blockOptional();
+    }
+
     public Optional<UserDTO> buscarUsuarioPorId(UUID id) {
         return webClient
                 .get()
@@ -33,6 +53,10 @@ public class KeycloakClient {
                 .retrieve()
                 .bodyToMono(UserDTO.class)
                 .onErrorResume(WebClientResponseException.NotFound.class, notFound -> Mono.empty())
+                .onErrorResume(WebClientResponseException.Unauthorized.class,
+                        forbidden -> Mono.error(new UnauthorizedException()))
+                .onErrorResume(WebClientResponseException.Forbidden.class,
+                        forbidden -> Mono.error(new ForbiddenException("buscar por usuario por ID")))
                 .blockOptional();
     }
 
@@ -47,6 +71,10 @@ public class KeycloakClient {
                 .header("Authorization", String.format("Bearer %s", authenticationProvider.token()))
                 .retrieve()
                 .bodyToFlux(UserDTO.class)
+                .onErrorResume(WebClientResponseException.Unauthorized.class,
+                        forbidden -> Mono.error(new UnauthorizedException()))
+                .onErrorResume(WebClientResponseException.Forbidden.class,
+                        forbidden -> Mono.error(new ForbiddenException("buscar usuarios")))
                 .collectList()
                 .block();
     }

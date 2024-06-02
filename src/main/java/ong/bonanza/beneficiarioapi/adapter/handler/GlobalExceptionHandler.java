@@ -9,9 +9,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import ong.bonanza.beneficiarioapi.adapter.exception.UnauthorizedException;
+import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.application.exception.UnauthorizedException;
 import ong.bonanza.beneficiarioapi.domain.exception.AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoInvalidoException;
+import ong.bonanza.beneficiarioapi.domain.exception.RecursoJaExistenteException;
 import ong.bonanza.beneficiarioapi.domain.exception.RecursoNaoEncontradoException;
 
 @ControllerAdvice
@@ -49,9 +51,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<String> handle(ForbiddenException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<String> handle(RecursoNaoEncontradoException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RecursoJaExistenteException.class)
+    public ResponseEntity<String> handle(RecursoJaExistenteException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AtendimentoDemandaItemExcedeuQuantidadeDemandaItemException.class)

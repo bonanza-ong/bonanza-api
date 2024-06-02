@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,12 +16,16 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "enderecos")
-public class Endereco {
+@Table(name = "enderecos_pessoas")
+public class EnderecoPessoa {
 
     @Id
     @GeneratedValue
     private UUID id;
+
+    @NotNull
+    @ManyToOne
+    private Pessoa pessoa;
 
     private String cep;
 

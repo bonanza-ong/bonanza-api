@@ -64,11 +64,13 @@ public class BeneficiarioController {
     ResponseEntity<IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO> iniciarAtendimentoDemanda(
             @PathVariable UUID beneficiarioId,
             @PathVariable UUID demandaItemId,
+            @RequestParam(value = "usuarioAtendimentoId", required = false) UUID usuarioAtendimentoId,
             @RequestBody Integer quantidadeAtendimento) {
 
         IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO atendimento = iniciarAtendimentoDemandaItemUC
                 .executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
-                        authenticationProvider.authenticatedUserId(),
+                        usuarioAtendimentoId == null ? authenticationProvider.authenticatedUserId()
+                                : usuarioAtendimentoId,
                         beneficiarioId,
                         demandaItemId,
                         quantidadeAtendimento));
@@ -91,11 +93,15 @@ public class BeneficiarioController {
     @PostMapping("{beneficiarioId}/demandas-itens")
     ResponseEntity<CadastrarDemandaItemUC.DemandaItemDTO> iniciarAtendimentoDemanda(
             @PathVariable UUID beneficiarioId,
+            @RequestParam(value = "usuarioSolicitanteId", required = false) UUID usuarioSolicitanteId,
             @RequestBody CadastrarDemandaItemUC.InformacoesItemDemandaItemDTO informacoes) {
+
+        UUID solicitanteId = usuarioSolicitanteId == null ? authenticationProvider.authenticatedUserId()
+                : usuarioSolicitanteId;
 
         final CadastrarDemandaItemUC.DemandaItemDTO demandaItem = cadastrarDemandaItemUC
                 .executar(new CadastrarDemandaItemUC.NovaDemandaItemDTO(
-                        authenticationProvider.authenticatedUserId(),
+                        solicitanteId,
                         beneficiarioId,
                         informacoes));
 

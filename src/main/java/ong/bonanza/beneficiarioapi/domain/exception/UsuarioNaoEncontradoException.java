@@ -14,4 +14,8 @@ public class UsuarioNaoEncontradoException extends RecursoNaoEncontradoException
         return new UsuarioNaoEncontradoException(String.format("[id=%s]", id.toString()));
     }
 
+    public static UsuarioNaoEncontradoException buscaPorAutenticado() {
+        return new UsuarioNaoEncontradoException("[usuarioAutenticado=null]");
+    }
+
 }
