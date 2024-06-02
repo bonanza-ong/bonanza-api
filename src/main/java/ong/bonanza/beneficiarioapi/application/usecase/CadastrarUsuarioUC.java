@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
 import ong.bonanza.beneficiarioapi.application.service.AuthService;
 import ong.bonanza.beneficiarioapi.domain.entity.Usuario;
+import ong.bonanza.beneficiarioapi.domain.service.GerenciadorAdministrativoDeUsuariosService;
 import ong.bonanza.beneficiarioapi.domain.service.UsuarioService;
 
 @RequiredArgsConstructor
@@ -18,17 +19,25 @@ public class CadastrarUsuarioUC {
 
     private final AuthService authService;
 
+    private final GerenciadorAdministrativoDeUsuariosService gerenciadorAdministrativoDeUsuariosService;
+
     private final CadastrarUsuarioUCMapper mapper;
 
     private final UsuarioService usuarioService;
 
     public UUID executar(UUID usuarioId) {
 
-        if (!(authService.possuiAlgumaRole("administrador")
-                || usuarioId.equals(authService.idUsuarioAutenticado())))
+        if (authService.possuiAlgumaRole("administrador"))
+            return cadastrar(gerenciadorAdministrativoDeUsuariosService.buscarPorId(usuarioId));
+
+        if (!usuarioId.equals(authService.idUsuarioAutenticado()))
             throw new ForbiddenException("cadastrar outro usuário");
 
-        return usuarioService.cadastrar(mapper.toUsuario(usuarioId)).getId();
+        return cadastrar(mapper.toUsuario(usuarioId));
+    }
+
+    private UUID cadastrar(Usuario usuario) {
+        return usuarioService.cadastrar(usuario).getId();
     }
 
     @Mapper

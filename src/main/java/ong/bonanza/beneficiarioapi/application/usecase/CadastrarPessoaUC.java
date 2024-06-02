@@ -32,10 +32,11 @@ public class CadastrarPessoaUC {
                 || novaPessoa.usuarioId.equals(authService.idUsuarioAutenticado())))
             throw new ForbiddenException("cadastrar outra pessoa");
 
-        return mapper.toPessoaDTO(pessoaService
-                .cadastrar(mapper.toPessoa(
-                        usuarioService.buscarPorId(novaPessoa.usuarioId),
-                        novaPessoa.nome)));
+        return cadastrar(novaPessoa, usuarioService.buscarPorId(novaPessoa.usuarioId));
+    }
+
+    private PessoaDTO cadastrar(NovaPessoaDTO novaPessoa, Usuario usuario) {
+        return mapper.toPessoaDTO(pessoaService.cadastrar(mapper.toPessoa(usuario, novaPessoa.nome)));
     }
 
     public record NovaPessoaDTO(UUID usuarioId, String nome) {

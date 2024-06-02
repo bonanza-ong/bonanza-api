@@ -11,6 +11,7 @@ import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
 import ong.bonanza.beneficiarioapi.application.service.AuthService;
 import ong.bonanza.beneficiarioapi.domain.entity.Padrinho;
 import ong.bonanza.beneficiarioapi.domain.entity.Pessoa;
+import ong.bonanza.beneficiarioapi.domain.entity.Usuario;
 import ong.bonanza.beneficiarioapi.domain.enumeration.StatusPadrinho;
 import ong.bonanza.beneficiarioapi.domain.service.PadrinhoService;
 import ong.bonanza.beneficiarioapi.domain.service.PessoaService;
@@ -36,10 +37,13 @@ public class CadastrarPadrinhoUC {
                 || usuarioId.equals(authService.idUsuarioAutenticado())))
             throw new ForbiddenException("cadastrar outro padrinho");
 
+        return cadastrar(usuarioService.buscarPorId(usuarioId), status);
+
+    }
+
+    private UUID cadastrar(Usuario usuario, StatusPadrinho status) {
         return padrinhoService
-                .cadastrar(mapper.toPadrinho(pessoaService.buscarPorUsuario(
-                        usuarioService.buscarPorId(usuarioId)),
-                        status))
+                .cadastrar(mapper.toPadrinho(pessoaService.buscarPorUsuario(usuario), status))
                 .getId();
     }
 
