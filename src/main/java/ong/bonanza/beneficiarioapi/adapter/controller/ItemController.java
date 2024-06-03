@@ -24,6 +24,7 @@ import ong.bonanza.beneficiarioapi.application.usecase.CadastrarItemUC;
 public class ItemController {
 
     private final CadastrarItemUC cadastrarItemUC;
+
     private final BuscarItensPaginadoUC buscarItensPaginadoUC;
 
     @Operation(summary = "Cadastra Item", security = @SecurityRequirement(name = "bearerAuth"), description = "Cadastra Item em uma categoria, caso a categoria não exista será retornado um erro 404")
