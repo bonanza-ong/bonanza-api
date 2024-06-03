@@ -30,52 +30,52 @@ import ong.bonanza.beneficiarioapi.application.usecase.IniciarAtendimentoDemanda
 @RequestMapping("beneficiarios")
 public class BeneficiarioController {
 
-	private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider authenticationProvider;
 
-	private final BuscarBeneficiariosPaginadoUC buscarBeneficiariosPaginadoUC;
+    private final BuscarBeneficiariosPaginadoUC buscarBeneficiariosPaginadoUC;
 
-	private final IniciarAtendimentoDemandaItemUC iniciarAtendimentoDemandaItemUC;
+    private final IniciarAtendimentoDemandaItemUC iniciarAtendimentoDemandaItemUC;
 
-	@Operation(summary = "Buscar beneficiários", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca beneficiários com paginação e por ordem de último atualizado")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarBeneficiariosPaginadoUC.BeneficiarioDTO.class)))),
-			@ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
-	})
-	@GetMapping
-	ResponseEntity<List<BuscarBeneficiariosPaginadoUC.BeneficiarioDTO>> BuscarBeneficiarios(
-			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "10") int size) {
+    @Operation(summary = "Buscar beneficiários", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca beneficiários com paginação e por ordem de último atualizado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarBeneficiariosPaginadoUC.BeneficiarioDTO.class)))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping
+    ResponseEntity<List<BuscarBeneficiariosPaginadoUC.BeneficiarioDTO>> BuscarBeneficiarios(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
-		return ResponseEntity.ok(buscarBeneficiariosPaginadoUC.executar(page, size));
-	}
+        return ResponseEntity.ok(buscarBeneficiariosPaginadoUC.executar(page, size));
+    }
 
-	@Operation(summary = "Inicia atendimento demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Inicia Atendimento de demanda, se mais de um provedor tentar pegar a mesma demanda ao mesmo tempo será lancaçado um erro de conflito")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO.class))),
-			@ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
-			@ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = String.class))),
-			@ApiResponse(responseCode = "422", content = @Content(schema = @Schema(implementation = String.class))),
-			@ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
-	})
-	@PostMapping("{beneficiarioId}/demandas-itens/{demandaItemId}/atendimentos")
-	ResponseEntity<IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO> iniciarAtendimentoDemanda(
-			@PathVariable UUID beneficiarioId,
-			@PathVariable UUID demandaItemId,
-			@RequestBody Integer quantidadeAtendimento) {
+    @Operation(summary = "Inicia atendimento demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Inicia Atendimento de demanda, se mais de um provedor tentar pegar a mesma demanda ao mesmo tempo será lancaçado um erro de conflito")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO.class))),
+            @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @PostMapping("{beneficiarioId}/demandas-itens/{demandaItemId}/atendimentos")
+    ResponseEntity<IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO> iniciarAtendimentoDemanda(
+            @PathVariable UUID beneficiarioId,
+            @PathVariable UUID demandaItemId,
+            @RequestBody Integer quantidadeAtendimento) {
 
-		IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO atendimento = iniciarAtendimentoDemandaItemUC
-				.executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
-						authenticationProvider.getAuthenticatedUserId(),
-						beneficiarioId,
-						demandaItemId,
-						quantidadeAtendimento));
+        IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO atendimento = iniciarAtendimentoDemandaItemUC
+                .executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
+                        authenticationProvider.getAuthenticatedUserId(),
+                        beneficiarioId,
+                        demandaItemId,
+                        quantidadeAtendimento));
 
-		return ResponseEntity
-				.created(URI.create(String.format("beneficiarios/%s/demandas-itens/%s/atendimentos/%s",
-						beneficiarioId.toString(),
-						demandaItemId.toString(),
-						atendimento)))
-				.body(atendimento);
+        return ResponseEntity
+                .created(URI.create(String.format("beneficiarios/%s/demandas-itens/%s/atendimentos/%s",
+                        beneficiarioId.toString(),
+                        demandaItemId.toString(),
+                        atendimento)))
+                .body(atendimento);
 
-	}
+    }
 }
