@@ -35,4 +35,4 @@ springdoc:
 api:
   name: API
   version: localhost
-  description: Beneficiário API
+  description: Bonanza API
