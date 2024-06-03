@@ -9,10 +9,11 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.beneficiarioapi.domain.entity.Beneficiario;
 import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
+import ong.bonanza.beneficiarioapi.domain.entity.Pessoa;
 
 @RequiredArgsConstructor
 @Component
-public class BuscarBeneficiarioPaginadoUC {
+public class BuscarBeneficiariosPaginadoUC {
 
     private final BuscarBeneficiariosPaginadoUCMapper mapper;
 
@@ -22,14 +23,15 @@ public class BuscarBeneficiarioPaginadoUC {
         return mapper.toBeneficiarioList(beneficiarioService.buscarTodosPaginado(page, size));
     }
 
-    public record BeneficiarioDTO(UUID id, String nome) {
+    public record BeneficiarioDTO(UUID id, String sobre, PessoaDTO pessoa) {
     }
+    
+    public record PessoaDTO(UUID id, String nome) {}
 
     @Mapper
     public interface BuscarBeneficiariosPaginadoUCMapper {
-
         List<BeneficiarioDTO> toBeneficiarioList(List<Beneficiario> beneficiarios);
-
+        PessoaDTO toPessoaDTO(Pessoa pessoa);
     }
 
 }
