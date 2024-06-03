@@ -21,7 +21,7 @@ import ong.bonanza.beneficiarioapi.application.usecase.CadastrarItemUC;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("itens")
-public class ItensController {
+public class ItemController {
 
         private final CadastrarItemUC cadastrarItemUC;
         private final BuscarItensPaginadoUC buscarItensPaginadoUC;
