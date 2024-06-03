@@ -20,6 +20,8 @@ import ong.bonanza.api.adapter.security.JwtConverter;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final String UUID_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -43,15 +45,21 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/itens**")
+                        .requestMatchers(HttpMethod.POST, "/itens")
                         .hasAnyRole("administrador")
-                        .requestMatchers(HttpMethod.GET, "/itens**")
-                        .hasAnyRole("administrador")
-                        .requestMatchers(HttpMethod.GET, "beneficiarios**")
-                        .authenticated()
-                        .requestMatchers(HttpMethod.POST,
-                                "beneficiarios**")
-                        .hasAnyRole("provedor"))
+                        .requestMatchers(HttpMethod.GET, "/itens")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/beneficiarios")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                String.format(
+                                        "/beneficiarios/%s/demandas-itens/%s/atendimentos",
+                                        UUID_PATTERN,
+                                        UUID_PATTERN))
+                        .hasAnyRole("provedor", "administrador")
+                        .requestMatchers(HttpMethod.GET, "/provedores")
+                        .permitAll())
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtConverter)))
                 .build();
