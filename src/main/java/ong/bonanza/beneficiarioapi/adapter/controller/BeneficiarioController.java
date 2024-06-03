@@ -32,7 +32,7 @@ public class BeneficiarioController {
 
     private final AuthenticationProvider authenticationProvider;
 
-    private final BuscarBeneficiariosPaginadoUC buscarBeneficiariosPaginadoUC;
+    private final BuscarBeneficiariosPaginadoUC buscarBeneficiarioPaginadoUC;
 
     private final IniciarAtendimentoDemandaItemUC iniciarAtendimentoDemandaItemUC;
 
@@ -46,7 +46,7 @@ public class BeneficiarioController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        return ResponseEntity.ok(buscarBeneficiariosPaginadoUC.executar(page, size));
+        return ResponseEntity.ok(buscarBeneficiarioPaginadoUC.executar(page, size));
     }
 
     @Operation(summary = "Inicia atendimento demanda item", security = @SecurityRequirement(name = "bearerAuth"), description = "Inicia Atendimento de demanda, se mais de um provedor tentar pegar a mesma demanda ao mesmo tempo será lancaçado um erro de conflito")
@@ -65,7 +65,7 @@ public class BeneficiarioController {
 
         IniciarAtendimentoDemandaItemUC.AtendimentoDemandaItemDTO atendimento = iniciarAtendimentoDemandaItemUC
                 .executar(new IniciarAtendimentoDemandaItemUC.NovoAtendimentoDemandaItem(
-                        authenticationProvider.getAuthenticatedUserId(),
+                        authenticationProvider.authenticatedUserId(),
                         beneficiarioId,
                         demandaItemId,
                         quantidadeAtendimento));

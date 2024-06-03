@@ -7,88 +7,103 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import ong.bonanza.beneficiarioapi.application.exception.ForbiddenException;
+import ong.bonanza.beneficiarioapi.application.service.AuthService;
+import ong.bonanza.beneficiarioapi.domain.entity.AtendimentoDemandaItem;
 import ong.bonanza.beneficiarioapi.domain.entity.DemandaItem;
-import ong.bonanza.beneficiarioapi.domain.entity.Doacao;
 import ong.bonanza.beneficiarioapi.domain.entity.Provedor;
-import ong.bonanza.beneficiarioapi.domain.enumeration.StatusDoacao;
-import ong.bonanza.beneficiarioapi.domain.service.AtedimentoDemandaService;
+import ong.bonanza.beneficiarioapi.domain.enumeration.StatusAtendimentoDemandaItem;
+import ong.bonanza.beneficiarioapi.domain.service.AtendimentoDemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.BeneficiarioService;
 import ong.bonanza.beneficiarioapi.domain.service.DemandaItemService;
 import ong.bonanza.beneficiarioapi.domain.service.PessoaService;
 import ong.bonanza.beneficiarioapi.domain.service.ProvedorService;
+import ong.bonanza.beneficiarioapi.domain.service.UsuarioService;
 
 @RequiredArgsConstructor
 @Component
 public class IniciarAtendimentoDemandaItemUC {
 
-	private final InciarAtendimentoDemandaItemUCMapper mapper;
+    private final AuthService authService;
 
-	private final AtedimentoDemandaService atedimentoDemandaService;
+    private final UsuarioService usuarioService;
 
-	private final PessoaService pessoaService;
+    private final InciarAtendimentoDemandaItemUCMapper mapper;
 
-	private final ProvedorService provedorService;
+    private final AtendimentoDemandaItemService atendimentoDemandaItemService;
 
-	private final DemandaItemService demandaItemService;
+    private final PessoaService pessoaService;
 
-	private final BeneficiarioService beneficiarioService;
+    private final ProvedorService provedorService;
 
-	public AtendimentoDemandaItemDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
-		return mapper.toAtendimentoDemandaDTO(
-				novoAtendimento.quantidadeAtendimento,
-				atedimentoDemandaService.inciarAtendimento(mapper.toDoacao(
-						novoAtendimento.quantidadeAtendimento,
-						demandaItemService.buscarPorIdEBeneficiario(
-								novoAtendimento.demandaItemId,
-								beneficiarioService.buscarPorId(novoAtendimento.beneficiarioId)),
-						provedorService
-								.buscarPorPessoa(pessoaService.buscarPorId(novoAtendimento.pessoaProvedoraId)))));
-	}
+    private final DemandaItemService demandaItemService;
 
-	public record NovoAtendimentoDemandaItem(
-			UUID pessoaProvedoraId,
-			UUID beneficiarioId,
-			UUID demandaItemId,
-			Integer quantidadeAtendimento) {
-	}
+    private final BeneficiarioService beneficiarioService;
 
-	public record AtendimentoDemandaItemDTO(
-			UUID id,
-			StatusDoacao status,
-			Integer quantidadeProvida,
-			DemandaItemDTO demanda) {
-	}
+    public AtendimentoDemandaItemDTO executar(NovoAtendimentoDemandaItem novoAtendimento) {
 
-	public record DemandaItemDTO(
-			UUID id,
-			UUID beneficiarioId,
-			Integer quantidadeSolicitada,
-			Integer quantidadeAtendida,
-			ItemDTO item) {
-	}
+        if (authService.possuiAlgumaRole("administrador")
+                || novoAtendimento.usuarioId.equals(authService.idUsuarioAutenticado()))
+            throw new ForbiddenException("atender demanda por outro usuário");
 
-	public record ItemDTO(
-			UUID id,
-			String nome) {
-	}
+        return mapper.toAtendimentoDemandaItemDTO(
+                novoAtendimento.quantidadeAtendimento,
+                atendimentoDemandaItemService.inciar(mapper.toAtendimentoDemandaItem(
+                        novoAtendimento.quantidadeAtendimento,
+                        demandaItemService.buscarPorIdEBeneficiario(
+                                novoAtendimento.demandaItemId,
+                                beneficiarioService.buscarPorId(novoAtendimento.beneficiarioId)),
+                        provedorService
+                                .buscarPorPessoa(pessoaService.buscarPorUsuario(
+                                        usuarioService.buscarPorId(novoAtendimento.usuarioId))))));
+    }
 
-	@Mapper
-	public interface InciarAtendimentoDemandaItemUCMapper {
+    public record NovoAtendimentoDemandaItem(
+            UUID usuarioId,
+            UUID beneficiarioId,
+            UUID demandaItemId,
+            Integer quantidadeAtendimento) {
+    }
 
-		@Mapping(target = "demanda", source = "demandaItem")
-		@Mapping(target = "quantidade", source = "quantidadeAtendimento")
-		@Mapping(target = "status", ignore = true)
-		@Mapping(target = "id", ignore = true)
-		@Mapping(target = "updatedAt", ignore = true)
-		@Mapping(target = "createdAt", ignore = true)
-		Doacao toDoacao(
-				Integer quantidadeAtendimento,
-				DemandaItem demandaItem,
-				Provedor provedor);
+    public record AtendimentoDemandaItemDTO(
+            UUID id,
+            StatusAtendimentoDemandaItem status,
+            Integer quantidadeProvida,
+            DemandaItemDTO demanda) {
+    }
 
-		@Mapping(target = "demanda.beneficiarioId", source = "doacao.demanda.beneficiario.id")
-		AtendimentoDemandaItemDTO toAtendimentoDemandaDTO(Integer quantidadeProvida, Doacao doacao);
+    public record DemandaItemDTO(
+            UUID id,
+            UUID beneficiarioId,
+            Integer quantidadeSolicitada,
+            Integer quantidadeAtendida,
+            ItemDTO item) {
+    }
 
-	}
+    public record ItemDTO(
+            UUID id,
+            String nome) {
+    }
+
+    @Mapper
+    public interface InciarAtendimentoDemandaItemUCMapper {
+
+        @Mapping(target = "demanda", source = "demandaItem")
+        @Mapping(target = "quantidade", source = "quantidadeAtendimento")
+        @Mapping(target = "status", ignore = true)
+        @Mapping(target = "id", ignore = true)
+        @Mapping(target = "updatedAt", ignore = true)
+        @Mapping(target = "createdAt", ignore = true)
+        AtendimentoDemandaItem toAtendimentoDemandaItem(
+                Integer quantidadeAtendimento,
+                DemandaItem demandaItem,
+                Provedor provedor);
+
+        @Mapping(target = "demanda.beneficiarioId", source = "atendimentoDemanda.demanda.beneficiario.id")
+        AtendimentoDemandaItemDTO toAtendimentoDemandaItemDTO(
+                Integer quantidadeProvida,
+                AtendimentoDemandaItem atendimentoDemanda);
+
+    }
 
 }

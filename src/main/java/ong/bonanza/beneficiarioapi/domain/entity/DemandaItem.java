@@ -32,6 +32,13 @@ public class DemandaItem {
     @GeneratedValue
     private UUID id;
 
+    @ManyToOne
+    private Usuario aprovador;
+
+    @NotNull
+    @ManyToOne
+    private Usuario solicitante;
+
     @NotNull
     @ManyToOne
     private Beneficiario beneficiario;
@@ -39,6 +46,8 @@ public class DemandaItem {
     @NotNull
     private Integer quantidadeSolicitada;
 
+    @NotNull
+    @Column(nullable = false)
     private Integer quantidadeAtendida;
 
     @NotNull
@@ -59,7 +68,7 @@ public class DemandaItem {
     private LocalDateTime updatedAt;
 
     @Version
-    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    @Column(name = "optlock", nullable = false)
     private Long versionNum;
 
 }

@@ -9,11 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,19 +20,18 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "pessoas", uniqueConstraints = @UniqueConstraint(columnNames = "usuario_id"))
-public class Pessoa {
+@Table(name = "aprovacoes_padrinhos")
+public class AprovacaoPadrinho {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    @NotNull
-    @OneToOne
-    private Usuario usuario;
+    @ManyToOne
+    private Usuario aprovador;
 
-    @NotBlank
-    private String nome;
+    @OneToOne
+    private Padrinho padrinho;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
