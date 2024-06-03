@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import ong.bonanza.api.application.usecase.BuscarProvedoresPaginadoUC;
 
@@ -25,7 +24,7 @@ public class ProvedorController {
 
         private final BuscarProvedoresPaginadoUC buscarProvedoresPaginadoUC;
 
-        @Operation(summary = "Busca por todos os provedores, podendo filtrar por nome", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca por todos os provedores utilizando de paginação")
+        @Operation(summary = "Busca por todos os provedores, podendo filtrar por nome", description = "Busca por todos os provedores utilizando de paginação")
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarProvedoresPaginadoUC.ProvedorDTO.class)))),
                         @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
