@@ -36,7 +36,7 @@ public class BeneficiarioController {
 
     private final IniciarAtendimentoDemandaItemUC iniciarAtendimentoDemandaItemUC;
 
-    @Operation(summary = "Buscar beneficiários", security = @SecurityRequirement(name = "bearerAuth"), description = "Busca beneficiários com paginação e por ordem de último atualizado")
+    @Operation(summary = "Buscar beneficiários", description = "Busca beneficiários com paginação e por ordem de último atualizado")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BuscarBeneficiariosPaginadoUC.BeneficiarioDTO.class)))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = String.class)))
