@@ -34,7 +34,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
       with:
-        registries: ${{ secrets.aws_account_id }}
+        registries: ${{ inputs.aws_account_id }}
         mask-password: "true" # see: https://github.com/aws-actions/amazon-ecr-login#docker-credentials
 
     - name: Build, tag, and push image to Amazon ECR
